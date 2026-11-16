@@ -1,0 +1,46 @@
+# Virtual environment
+.venv/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+!.env.django.example
+!.env.production.example
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Test coverage
+.coverage
+coverage.xml
+htmlcov/
+
+# Django/runtime
+db.sqlite3
+staticfiles/
+logs/
+*.log
+for published new version.txt
+
+# Local application data
+state.json
+account.json
+trades.json
+underlying_positions.json
+*.backup-*
+reports/
+backups/
+audit/private/
+.cursor/
+premium-audit.json
+research/private/
+
+# OS/editor
+.DS_Store
+.idea/
+.vscode/

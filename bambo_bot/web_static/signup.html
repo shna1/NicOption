@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-theme="light" data-editorial="true">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>ساخت حساب — nicoption</title>
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/assets/nicoption-mark.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css?v=20261017-popup-dana-3" />
+    <link rel="stylesheet" href="/login.css?v=20261102-email-verification-1" />
+    <script src="/signup.js?v=20261102-email-verification-1" defer></script>
+  </head>
+  <body class="login-page signup-page">
+    <main class="login-shell signup-shell">
+      <section class="login-context" aria-labelledby="signupProductTitle">
+        <p class="login-eyebrow">NICOPTION / NEW ACCOUNT</p>
+        <h1 id="signupProductTitle">میز تحلیل خودتان را بسازید</h1>
+        <p>هر حساب فضای مستقل برای داده‌های اقتصادی، مقالات، معاملات و پایش عملکرد دارد.</p>
+        <ol class="signup-steps" aria-label="مراحل شروع کار">
+          <li><span>۱</span>نام کاربری و رمز را وارد کنید</li>
+          <li><span>۲</span>بررسی انسانی را پاسخ دهید</li>
+          <li><span>۳</span>وارد حساب شوید</li>
+        </ol>
+      </section>
+
+      <section class="login-card signup-card" aria-labelledby="signupTitle">
+        <header>
+          <small>حساب شخصی</small>
+          <h2 id="signupTitle">ساخت حساب nicoption</h2>
+          <p>برای ورود اولیه فقط نام کاربری و رمز عبور لازم است. فعال‌سازی کامل امکانات بعداً با ایمیل انجام می‌شود.</p>
+        </header>
+        <div id="signupError" class="login-error hidden" role="alert" tabindex="-1"></div>
+        <form id="signupForm" novalidate>
+          <label for="username">نام کاربری</label>
+          <input id="username" name="username" type="text" autocomplete="username" maxlength="150" autocapitalize="none" spellcheck="false" required autofocus aria-describedby="usernameHint" />
+          <span id="usernameHint" class="field-hint">حروف، عدد و نشانه‌های @ . + - _ مجاز هستند.</span>
+          <span id="usernameError" class="field-error" aria-live="polite"></span>
+
+          <label for="password1">رمز عبور</label>
+          <div class="password-field">
+            <input id="password1" name="password1" type="password" autocomplete="new-password" required aria-describedby="passwordHint" />
+            <button type="button" data-password-toggle="password1" aria-pressed="false" aria-label="نمایش رمز عبور">نمایش</button>
+          </div>
+          <span id="passwordHint" class="field-hint">حداقل ۸ نویسه؛ رمز رایج، کاملاً عددی یا شبیه نام کاربری نباشد.</span>
+          <span id="password1Error" class="field-error" aria-live="polite"></span>
+
+          <label for="password2">تکرار رمز عبور</label>
+          <div class="password-field">
+            <input id="password2" name="password2" type="password" autocomplete="new-password" required />
+            <button type="button" data-password-toggle="password2" aria-pressed="false" aria-label="نمایش تکرار رمز عبور">نمایش</button>
+          </div>
+          <span id="password2Error" class="field-error" aria-live="polite"></span>
+
+          <fieldset class="human-check">
+            <legend>بررسی انسانی</legend>
+            <div class="human-question-row">
+              <span id="humanQuestion" aria-live="polite">در حال دریافت سؤال…</span>
+              <button id="refreshChallenge" type="button">سؤال تازه</button>
+            </div>
+            <label for="humanAnswer">پاسخ</label>
+            <input id="humanAnswer" name="human_answer" type="text" inputmode="numeric" autocomplete="off" required aria-describedby="humanAnswerHint" />
+            <span id="humanAnswerHint" class="field-hint">پاسخ را با عدد فارسی یا انگلیسی وارد کنید.</span>
+            <span id="humanAnswerError" class="field-error" aria-live="polite"></span>
+          </fieldset>
+
+          <button id="signupButton" class="primary-button login-submit" type="submit"><span>ساخت حساب</span></button>
+        </form>
+        <footer>حساب دارید؟ <a href="/login">وارد شوید</a>.</footer>
+      </section>
+    </main>
+  </body>
+</html>

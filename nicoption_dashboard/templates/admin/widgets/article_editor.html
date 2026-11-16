@@ -1,0 +1,44 @@
+<div class="article-editor" data-article-editor>
+  <textarea name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %} class="article-editor-source">{% if widget.value != None %}{{ widget.value }}{% endif %}</textarea>
+  <div class="article-editor-shell">
+    <div class="article-editor-toolbar" role="toolbar" aria-label="ابزارهای ویرایش مقاله">
+      <button type="button" data-command="bold" aria-label="پررنگ"><strong>پررنگ</strong></button>
+      <button type="button" data-command="italic" aria-label="کج"><em>کج</em></button>
+      <button type="button" data-block="h2">تیتر اصلی</button>
+      <button type="button" data-block="h3">زیرتیتر</button>
+      <button type="button" data-command="insertUnorderedList">فهرست نقطه‌ای</button>
+      <button type="button" data-command="insertOrderedList">فهرست شماره‌ای</button>
+      <button type="button" data-block="blockquote">نقل‌قول</button>
+      <button type="button" data-open-link>پیوند</button>
+      <button type="button" data-toggle-image aria-expanded="false">درج تصویر</button>
+      <button type="button" data-command="undo">بازگشت</button>
+      <button type="button" data-command="redo">تکرار</button>
+      <button type="button" data-command="removeFormat">پاک‌کردن قالب</button>
+    </div>
+    <div class="article-image-panel" data-image-panel hidden>
+      <div class="article-image-field">
+        <label>فایل تصویر <span>JPG، PNG، WebP یا GIF تا ۵ مگابایت</span></label>
+        <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" data-image-file>
+      </div>
+      <div class="article-image-field">
+        <label>متن جایگزین <span>توضیح کوتاه برای دسترس‌پذیری</span></label>
+        <input type="text" maxlength="180" data-image-alt>
+      </div>
+      <button type="button" class="article-image-upload" data-upload-image>بارگذاری و درج</button>
+      <p class="article-editor-status" data-image-status role="status" aria-live="polite"></p>
+    </div>
+    <div class="article-editor-canvas" contenteditable="true" role="textbox" aria-multiline="true" aria-label="متن مقاله" data-editor-canvas></div>
+  </div>
+  <dialog class="article-link-dialog" data-link-dialog aria-labelledby="article-link-title">
+    <form method="dialog">
+      <h2 id="article-link-title">افزودن پیوند</h2>
+      <label>متن پیوند<input type="text" data-link-text></label>
+      <label>نشانی پیوند<input type="url" inputmode="url" placeholder="https://example.com" data-link-url></label>
+      <p class="article-editor-status" data-link-status role="status" aria-live="polite"></p>
+      <div class="article-link-actions">
+        <button type="button" data-close-link>انصراف</button>
+        <button type="button" class="article-link-confirm" data-insert-link>افزودن پیوند</button>
+      </div>
+    </form>
+  </dialog>
+</div>

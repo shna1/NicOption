@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">nicoption — میزکار داده و تحلیل بازار</title>
+  <desc id="desc">کارت معرفی سیاه‌وسفید nicoption برای داده‌های اقتصادی، پژوهش بازار و تحلیل اختیار معامله</desc>
+  <rect width="1200" height="630" fill="#f5f5f6"/>
+  <g stroke="#dcdce0" stroke-width="1">
+    <path d="M0 90h1200M0 180h1200M0 270h1200M0 360h1200M0 450h1200M0 540h1200"/>
+    <path d="M100 0v630M200 0v630M300 0v630M400 0v630M500 0v630M600 0v630M700 0v630M800 0v630M900 0v630M1000 0v630M1100 0v630"/>
+  </g>
+  <rect x="72" y="64" width="70" height="70" rx="8" fill="#111113"/>
+  <path d="M88 116V82h8l22 21V82h8v34h-8L96 95v21z" fill="#f5f5f6"/>
+  <text x="164" y="112" fill="#111113" font-family="Arial, sans-serif" font-size="52" font-weight="700" letter-spacing="-2">nicoption</text>
+  <text x="72" y="214" fill="#6b6b72" font-family="Arial, sans-serif" font-size="23" letter-spacing="3">MARKET DATA &amp; RESEARCH</text>
+  <text x="1128" y="297" text-anchor="end" fill="#111113" font-family="Dana, Tahoma, Arial, sans-serif" font-size="56" font-weight="700">میزکار داده و تحلیل بازار</text>
+  <text x="1128" y="351" text-anchor="end" fill="#6b6b72" font-family="Dana, Tahoma, Arial, sans-serif" font-size="27">داده‌های اقتصادی، مقاله‌های تحلیلی و ابزارهای اختیار معامله</text>
+  <g transform="translate(72 410)">
+    <path d="M0 112H1056" stroke="#9a9aa1" stroke-width="2"/>
+    <path d="M0 142C110 134 160 96 242 106s123 40 202 3 129-78 220-48 132 75 218 28 120-75 174-69" fill="none" stroke="#111113" stroke-width="8"/>
+    <path d="M0 156C108 151 162 123 244 128s122 28 201 5 131-53 220-35 130 51 217 19 120-48 174-43" fill="none" stroke="#6b6b72" stroke-width="3" stroke-dasharray="12 10"/>
+    <circle cx="664" cy="61" r="9" fill="#0f6b3e"/>
+  </g>
+  <text x="72" y="592" fill="#6b6b72" font-family="Arial, sans-serif" font-size="18">NICOPTION.IR / DATA · RESEARCH · OPTIONS</text>
+</svg>

@@ -1,0 +1,2 @@
+indicator_code,period_date,value,unit,published_at,original_source,source_url,status,revision,notes,external_id
+TEST_INDEX,2025-01-01,101.50,index,2025-01-10T10:00:00+00:00,Test Official Source,https://example.test/data,revised,1,synthetic revised test fixture,test-row-1

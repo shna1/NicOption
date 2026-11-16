@@ -1,0 +1,20 @@
+http://127.0.0.1, http://localhost {
+    reverse_proxy web:8000
+}
+
+www.nicoption.ir {
+    redir https://nicoption.ir{uri} permanent
+}
+
+nicoption.ir {
+    encode zstd gzip
+    request_body { max_size 25MB }
+    reverse_proxy web:8000
+    header {
+        X-Content-Type-Options nosniff
+        Referrer-Policy same-origin
+        Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+        Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+        -Server
+    }
+}

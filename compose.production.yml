@@ -1,0 +1,115 @@
+name: nicoption
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - private
+
+  web:
+    image: nicoption-web:local
+    build:
+      context: .
+      dockerfile: Dockerfile.django
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+    depends_on:
+      db:
+        condition: service_healthy
+    expose:
+      - "8000"
+    volumes:
+      - article_media:/app/media
+    networks:
+      - private
+
+  cbi-sync:
+    image: nicoption-web:local
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+    command:
+      - sh
+      - -c
+      - while true; do python manage.py sync_cbi_mcp --keep 12 || true; sleep "$${CBI_MCP_SYNC_INTERVAL_SECONDS:-21600}"; done
+    depends_on:
+      web:
+        condition: service_healthy
+    networks:
+      - private
+
+  amar-sync:
+    image: nicoption-web:local
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+    command:
+      - sh
+      - -c
+      - while true; do python manage.py sync_amar_mcp --keep 12 || true; sleep "$${AMAR_MCP_SYNC_INTERVAL_SECONDS:-21600}"; done
+    depends_on:
+      web:
+        condition: service_healthy
+    networks:
+      - private
+
+  x-post-sync:
+    image: nicoption-web:local
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+    command:
+      - sh
+      - -c
+      - while true; do python manage.py sync_x_posts || true; sleep "$${X_POST_SYNC_INTERVAL_SECONDS:-600}"; done
+    depends_on:
+      web:
+        condition: service_healthy
+    networks:
+      - private
+
+  proxy:
+    image: caddy:2.10-alpine
+    restart: unless-stopped
+    depends_on:
+      web:
+        condition: service_healthy
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - private
+
+volumes:
+  postgres_data:
+  article_media:
+  caddy_data:
+  caddy_config:
+
+networks:
+  private:
+    driver: bridge

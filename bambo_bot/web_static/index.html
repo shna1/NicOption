@@ -1,0 +1,916 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-theme="light" data-appearance="glass" data-editorial="true">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="robots" content="noindex, nofollow" />
+    <script>
+      (() => {
+        document.documentElement.dataset.editorial = "true";
+        try {
+          const saved = JSON.parse(localStorage.getItem("nicoption.user-settings.v3") || "{}");
+          const theme = saved.theme === "light" || saved.theme === "dark"
+            ? saved.theme
+            : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          document.documentElement.dataset.theme = theme;
+        } catch (_) { document.documentElement.dataset.theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; }
+      })();
+    </script>
+    <title>nicoption · داده و تحلیل بازار</title>
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/assets/nicoption-mark.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css?v=20261107-cbi-exchange-removal-1" />
+  </head>
+  <body>
+    <a class="skip-link" href="#mainContent">رفتن به محتوای اصلی</a>
+    <div class="page-shell">
+      <header class="hero app-header">
+        <a class="brand-block" href="/dashboard" aria-label="nicoption؛ رفتن به داشبورد">
+          <span class="brand-mark" aria-hidden="true">NC</span>
+          <span class="brand-copy"><strong>nicoption</strong><small>داده، پژوهش و اختیار</small></span>
+        </a>
+
+        <nav id="mainNavigation" class="main-navigation" aria-label="منوی اصلی" aria-hidden="false">
+          <ul class="nav-list">
+            <li><a class="nav-primary" href="/dashboard" data-page-link="overview" data-feature="overview">داشبورد</a></li>
+            <li><a class="nav-primary" href="/articles" data-page-link="articles" data-feature="articles">مقالات</a></li>
+            <li class="nav-section nav-option-market-section" data-feature-any="market,tehran_options,commodity_exchange,order_flow,forecast,trades,closed_trades,profit_recognition">
+              <div class="nav-section-main"><button class="nav-primary nav-dropdown-trigger" type="button" aria-controls="optionMarketNavigationMenu" aria-expanded="false">بازار آپشن<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 9 5 5 5-5"/></svg></button></div>
+              <ul id="optionMarketNavigationMenu" class="nav-children" aria-label="بازار آپشن" aria-hidden="true">
+                <li><a href="/opportunities" data-page-link="market" data-feature="market">فرصت‌ها</a></li>
+                <li><a id="marketPrimaryLink" href="/market" data-page-link="tehran-options" data-page-link-alias="commodity-exchange,order-flow,forecast" data-feature="tehran_options" data-feature-any="tehran_options,commodity_exchange,order_flow,forecast">بازار</a></li>
+                <li><a id="tradesPrimaryLink" href="/trades/open" data-page-link="trades" data-page-link-alias="closed-trades" data-feature="trades" data-feature-any="trades,closed_trades">معاملات</a></li>
+                <li><a href="/performance" data-page-link="profit-recognition" data-feature="profit_recognition">عملکرد</a></li>
+              </ul>
+            </li>
+            <li data-feature="economic_data"><a class="nav-primary" href="/economic-indicators" data-page-link="economic-indicators" data-page-link-alias="economic-comparison,statistical-center,central-bank">داده‌های اقتصادی</a></li>
+            <li class="nav-section nav-more-section" data-feature-any="calculator,settings">
+              <div class="nav-section-main"><button class="nav-primary nav-dropdown-trigger nav-more-trigger" type="button" aria-controls="moreNavigationMenu" aria-expanded="false">بیشتر<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 9 5 5 5-5"/></svg></button></div>
+              <ul id="moreNavigationMenu" class="nav-children nav-utilities" aria-label="ابزارها و تنظیمات" aria-hidden="true">
+                <li><a href="/calculator" data-page-link="calculator" data-path-link="/calculator" data-feature="calculator">ماشین‌حساب</a></li>
+                <li><a href="/methodology" data-page-link="methodology" data-path-link="/methodology" data-feature="calculator">روش محاسبات</a></li>
+                <li><a href="/settings" data-page-link="settings" data-feature="settings">تنظیمات</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="hero-actions header-controls">
+          <button id="navigationToggle" class="icon-button navigation-toggle" type="button" aria-controls="mainNavigation" aria-expanded="false" aria-label="بازکردن منوی اصلی" hidden>
+            <svg class="ui-icon menu-icon-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+            <svg class="ui-icon menu-icon-close" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+          </button>
+          <button id="themeToggle" class="icon-button theme-toggle" type="button" aria-pressed="true" aria-label="فعال‌کردن حالت روشن" title="تغییر حالت روشن و تاریک">
+            <svg class="ui-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15.2A8.5 8.5 0 0 1 8.8 4 8.5 8.5 0 1 0 20 15.2Z"/></svg>
+            <svg class="ui-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          </button>
+          <div class="account-menu" aria-label="حساب کاربری"><strong id="currentUsername">—</strong><button id="logoutButton" type="button">خروج</button></div>
+          <button id="refreshButton" class="primary-button header-cta" type="button"><svg class="ui-icon refresh-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M18.5 9A7 7 0 0 0 6 7M5.5 15A7 7 0 0 0 18 17"/></svg><span>تازه‌سازی</span></button>
+          <span class="header-freshness"><span>آخرین دریافت</span><strong id="updatedAt">—</strong></span>
+        </div>
+      </header>
+
+      <button id="navigationBackdrop" class="navigation-backdrop" type="button" aria-label="بستن منوی اصلی" tabindex="-1" hidden></button>
+
+      <main id="mainContent" tabindex="-1">
+        <section id="statusBanner" class="status-banner loading" aria-live="polite">
+          <span class="spinner"></span><span>در حال دریافت داده‌ها…</span>
+        </section>
+
+        <section class="page-heading" data-page-view="overview"><small>نمای کلی امروز</small><h2>داشبورد</h2><p>خلاصه فرصت‌ها، موقعیت‌ها و هشدارهای مهم؛ هر مورد به صفحه مالک خود پیوند دارد.</p></section>
+        <section id="dashboardOverview" class="dashboard-overview" data-page-view="overview" aria-live="polite" aria-busy="true">
+          <div class="dashboard-loading" aria-label="در حال آماده‌سازی داشبورد">
+            <i></i><i></i><i></i><i></i><b></b><b></b>
+          </div>
+        </section>
+        <section class="page-heading economic-hero shared-page-hero" data-page-view="articles">
+          <div class="economic-hero-copy"><small>خبر، پژوهش و آموزش بازار</small><h2>مقالات و خبرهای ترجمه‌شده</h2><p>یادداشت‌های تحلیلی nicoption و ترجمه فارسی خبرهای منتخب FinancialJuice با پیوند مستقیم به متن اصلی.</p></div>
+        </section>
+        <section id="articlesPage" class="articles-page" data-page-view="articles" aria-live="polite" aria-busy="true">
+          <div class="articles-loading"><span class="spinner" aria-hidden="true"></span><span>در حال دریافت مقالات…</span></div>
+        </section>
+        <section class="page-heading" hidden><small>فرصت‌های شناسایی‌شده توسط سامانه</small><h2>فرصت‌ها</h2><p>فرصت‌های کاوردکال و خرید اختیار را همراه دلایل شناسایی بررسی کنید.</p></section>
+        <section class="page-heading economic-hero shared-page-hero shared-page-hero--option" data-page-view="tehran-options"><div class="economic-hero-copy"><small>نمای بی‌طرفانه قراردادها</small><h2>داده‌های بازار</h2><p>داده‌های قابل دسترس قراردادهای اختیار را فیلتر، مرتب و مقایسه کنید.</p></div></section>
+        <section class="page-heading economic-hero shared-page-hero shared-page-hero--option" data-page-view="commodity-exchange"><div class="economic-hero-copy"><small>دلار ضمنی گواهی‌های کالایی</small><h2>بورس کالا</h2><p>نرخ دلار مستتر در شمش طلا، شمش نقره، کاتد مس و گواهی سکه را با دلار بازار آزاد مقایسه کنید.</p></div></section>
+        <section class="page-heading economic-hero shared-page-hero shared-page-hero--option" data-page-view="order-flow"><div class="economic-hero-copy"><small>عمق تجمیعی بازار</small><h2>جریان سفارشات</h2><p>توازن سفارش‌های خرید و فروش هر نماد را در تمام ردیف‌های منتشرشده توسط منبع رسمی ببینید.</p></div></section>
+        <section class="page-heading economic-hero shared-page-hero shared-page-hero--option" data-page-view="forecast"><div class="economic-hero-copy"><small>مدل‌های کمی بازار کالا</small><h2 class="forecast-page-title">پیش‌بینی <span class="experimental-tag">آزمایشی</span></h2><p>سیگنال‌های روزانه و نتیجه بک‌تست شمش طلا، شمش نقره و مس کاتد بر پایه داده‌های Chartix.</p></div></section>
+        <section class="economic-page-shell" data-page-view="economic-indicators" aria-labelledby="economicPageTitle">
+          <header class="economic-hero">
+            <div class="economic-hero-copy"><small>میز اقتصاد ایران</small><h1 id="economicPageTitle">نبض اقتصاد و بازار</h1><p>نمای منتخب تورم، نقدینگی، دلار، تتر، طلا، سکه و شاخص کل بورس تهران</p></div>
+          </header>
+          <nav class="economic-desk-nav" aria-label="بخش‌های میز اقتصاد">
+            <a href="/economic-indicators" data-path-link="/economic-indicators">نمای کلی</a><a href="/economic-comparison" data-path-link="/economic-comparison">مقایسه روندها</a><a href="/statistical-center" data-path-link="/statistical-center">مرکز آمار</a><a href="/central-bank" data-path-link="/central-bank">بانک مرکزی</a>
+          </nav>
+          <div id="economicIndicatorsApp" class="economic-app" aria-live="polite" aria-busy="true">
+            <section class="economic-loading" aria-label="در حال آماده‌سازی شاخص‌های اقتصادی"><div class="economic-loading-line"></div><div class="economic-loading-pulse"><i></i><i></i><i></i><i></i></div><div class="economic-loading-grid"><b></b></div></section>
+          </div>
+        </section>
+        <section class="economic-page-shell economic-comparison-page" data-page-view="economic-comparison" aria-labelledby="economicComparisonPageTitle">
+          <header class="economic-hero">
+            <div class="economic-hero-copy"><small>تحلیل هم‌زمان شاخص‌ها</small><h1 id="economicComparisonPageTitle">مقایسه روندهای اقتصادی</h1><p>تا سه شاخص را جست‌وجو و انتخاب کنید و مسیر تغییر آن‌ها را در یک بازه زمانی مشترک ببینید.</p></div>
+          </header>
+          <nav class="economic-desk-nav" aria-label="بخش‌های میز اقتصاد">
+            <a href="/economic-indicators" data-path-link="/economic-indicators">نمای کلی</a><a href="/economic-comparison" data-path-link="/economic-comparison">مقایسه روندها</a><a href="/statistical-center" data-path-link="/statistical-center">مرکز آمار</a><a href="/central-bank" data-path-link="/central-bank">بانک مرکزی</a>
+          </nav>
+          <div id="economicComparisonApp" class="economic-app economic-comparison-app" aria-live="polite" aria-busy="true">
+            <section class="economic-loading" aria-label="در حال آماده‌سازی مقایسه روندها"><div class="economic-loading-line"></div><div class="economic-loading-grid"><b></b></div></section>
+          </div>
+        </section>
+        <section class="economic-page-shell statistical-center-page" data-page-view="statistical-center" aria-labelledby="statisticalCenterPageTitle">
+          <header class="economic-hero">
+            <div class="economic-hero-copy"><small>مرکز آمار ایران</small><h1 id="statisticalCenterPageTitle">داده‌های مرکز آمار</h1><p>بازار کار، تولید، جمعیت و خانوار در کنار سری‌های رسمی قیمت و تورم؛ با منشأ روشن هر جدول</p></div>
+          </header>
+          <nav class="economic-desk-nav" aria-label="بخش‌های میز اقتصاد">
+            <a href="/economic-indicators" data-path-link="/economic-indicators">نمای کلی</a><a href="/economic-comparison" data-path-link="/economic-comparison">مقایسه روندها</a><a href="/statistical-center" data-path-link="/statistical-center">مرکز آمار</a><a href="/central-bank" data-path-link="/central-bank">بانک مرکزی</a>
+          </nav>
+          <section id="statistical-center-data" class="statistical-center-panel" aria-labelledby="statisticalCenterTitle">
+            <header><div><small>قیمت و تورم</small><h2 id="statisticalCenterTitle" tabindex="-1">فهرست کامل داده‌های قیمت و تورم</h2><p>سری‌های اصلی و تفکیکی ماهانه و فصلی؛ با تاریخچه رسمی هر شاخص</p></div></header>
+            <div id="statisticalCenterApp" aria-live="polite" aria-busy="true">
+              <section class="statistical-center-loading" aria-label="در حال دریافت داده‌های مرکز آمار"><span class="spinner"></span><p>در حال آماده‌سازی فهرست مرکز آمار…</p></section>
+            </div>
+          </section>
+        </section>
+        <section class="economic-page-shell monetary-details-page" data-page-view="central-bank" aria-labelledby="monetaryDetailsTitle">
+          <header class="economic-hero">
+            <div class="economic-hero-copy"><small>بانک مرکزی جمهوری اسلامی ایران</small><h1 id="monetaryDetailsTitle">داده‌های بانک مرکزی</h1><p>فهرست کامل شاخص‌های پولی، نقدینگی و سپرده‌ها با مقدار، رشد ماهانه، رشد سالانه و تاریخچه</p></div>
+          </header>
+          <nav class="economic-desk-nav" aria-label="بخش‌های میز اقتصاد">
+            <a href="/economic-indicators" data-path-link="/economic-indicators">نمای کلی</a><a href="/economic-comparison" data-path-link="/economic-comparison">مقایسه روندها</a><a href="/statistical-center" data-path-link="/statistical-center">مرکز آمار</a><a href="/central-bank" data-path-link="/central-bank">بانک مرکزی</a>
+          </nav>
+          <section id="central-bank-data" class="statistical-center-panel monetary-center-panel" aria-labelledby="centralBankCatalogTitle">
+            <header><div><small>بانک مرکزی جمهوری اسلامی ایران</small><h2 id="centralBankCatalogTitle" tabindex="-1">فهرست کامل شاخص‌های پولی و بانکی</h2><p>شاخص‌های اصلی و تفصیلی نقدینگی و سپرده‌ها؛ با مقدار، نرخ رشد و تاریخچه هر شاخص</p></div></header>
+            <div id="monetaryDetailsApp" class="economic-app" aria-live="polite" aria-busy="true">
+              <section class="economic-loading" aria-label="در حال آماده‌سازی همه داده‌های بانک مرکزی"><div class="economic-loading-line"></div><div class="economic-loading-pulse"><i></i><i></i><i></i><i></i></div><div class="economic-loading-grid"><b></b></div></section>
+            </div>
+          </section>
+        </section>
+        <section class="page-heading economic-hero shared-page-hero shared-page-hero--option" data-page-view="trades"><div class="economic-hero-copy"><small>معاملات من · باز</small><h2>معاملات باز</h2><p>موقعیت‌های فعال را پایش کنید و خروج، اعمال، رول یا نگهداری را بررسی کنید.</p><div id="openTradesHeroMeta" class="open-header-meta open-trades-hero-meta" role="status" aria-live="polite" hidden><span id="openTradesHeroCount"></span><span id="openTradesHeroUpdatedAt"></span></div></div></section>
+        <section class="page-heading economic-hero shared-page-hero shared-page-hero--option" data-page-view="profit-recognition"><div class="economic-hero-copy"><small>تحلیل تجمیعی معاملات معتبر</small><h2>گزارش عملکرد</h2><p>سود واقعی، کیفیت عملکرد و نتیجه استراتژی‌ها را بدون ترکیب سود تحقق‌نیافته بررسی کنید.</p></div></section>
+        <section class="page-heading economic-hero shared-page-hero shared-page-hero--option" data-page-view="closed-trades"><div class="economic-hero-copy"><small>معاملات من · بسته‌شده</small><h2>معاملات بسته‌شده</h2><p>نتیجه نهایی، روش خروج و سابقه ورود و خروج هر معامله را مرور کنید.</p></div></section>
+        <section class="page-heading" data-page-view="calculator"><small>ابزارهای محاسباتی</small><h2>ماشین‌حساب استراتژی‌ها</h2><p>کاوردکال و خرید اختیار خرید را با ورودی دستی ارزیابی کنید.</p></section>
+        <section class="page-heading" data-page-view="methodology"><small>تعریف شفاف ورودی، فرمول و محدودیت</small><h2>روش محاسبات</h2><p>مبنای محاسبه شاخص‌های بازار، معاملات باز و گزارش عملکرد را بدون ابهام مرور کنید.</p></section>
+        <section class="page-heading" data-page-view="settings"><small>شخصی‌سازی برنامه</small><h2>تنظیمات نمایش و تازه‌سازی</h2><p>ظاهر داشبورد و فاصله دریافت خودکار داده‌ها را متناسب با نیاز خود تنظیم کنید.</p></section>
+
+        <section class="methodology-page" data-page-view="methodology" aria-labelledby="methodologyTitle">
+          <header class="methodology-hero">
+            <div><span class="methodology-kicker">سند محاسباتی nicoption</span><h2 id="methodologyTitle">از داده بازار تا نتیجه قابل‌ردیابی</h2><p>هر عدد باید به ورودی مشخص، فرمول روشن و محدودیت داده متصل باشد. این صفحه مرجع مشترک تحلیل بازار، معاملات و عملکرد است.</p></div>
+            <aside><strong>اصل پایه</strong><p>قیمت‌های پیشنهادی سامانه جایگزین تأیید کاربر نیستند و خروجی‌ها توصیه خرید یا فروش محسوب نمی‌شوند.</p></aside>
+          </header>
+
+          <nav class="methodology-index" aria-label="فهرست روش‌های محاسبه">
+            <a href="#method-covered">کاوردکال</a><a href="#method-long">خرید Call</a><a href="#method-portfolio">پرتفوی</a><a href="#method-performance">عملکرد</a><a href="#method-data">داده و محدودیت‌ها</a>
+          </nav>
+
+          <div class="methodology-grid">
+            <article id="method-covered" class="methodology-card covered"><header><span>استراتژی ۱</span><h3>کاوردکال</h3><p>یک موقعیت واحد شامل دارایی پایه وثیقه‌شده و اختیار خرید فروخته‌شده است.</p></header><dl><div><dt>سرمایه درگیر</dt><dd>بهای بخش وثیقه‌شده − پریمیوم خالص دریافتی + کارمزدهای ثبت‌شده</dd></div><div><dt>نقطه سربه‌سر</dt><dd>قیمت مبنای دارایی پایه − پریمیوم خالص به‌ازای هر واحد</dd></div><div><dt>سود سناریوی آفست و فروش پایه</dt><dd>تغییر ارزش دارایی پایه + تغییر ارزش اختیار − تمام کارمزدهای سناریو</dd></div><div><dt>سود نگهداری تا سررسید</dt><dd>پرداخت نهایی دارایی پایه و اختیار در سررسید − هزینه ورود و خروج</dd></div></dl><footer>وثیقه بخشی از همان دارایی پایه است و در ارزش کل پرتفوی دوباره جمع نمی‌شود.</footer></article>
+
+            <article id="method-long" class="methodology-card long"><header><span>استراتژی ۲</span><h3>خرید اختیار خرید</h3><p>ریسک موقعیت به پریمیوم و هزینه‌های پرداخت‌شده محدود است؛ ارزش‌گذاری جاری بر مبنای قیمت انتخابی کاربر انجام می‌شود.</p></header><dl><div><dt>سرمایه درگیر</dt><dd>پریمیوم خرید × تعداد قرارداد × اندازه قرارداد + کارمزد ورود</dd></div><div><dt>نقطه سربه‌سر سررسید</dt><dd>قیمت اعمال + پریمیوم و هزینه‌های سرشکن‌شده</dd></div><div><dt>سود آفست</dt><dd>(قیمت اختیار خروج − قیمت اختیار ورود) × تعداد قرارداد × اندازه قرارداد − مجموع کارمزدها</dd></div><div><dt>اعمال و دریافت دارایی پایه</dt><dd>تعداد واحد پایه برابر تعداد قرارداد × اندازه قرارداد است؛ قیمت اعمال با نرخ بدون ریسک برای فاصله خرید تا اعمال تعدیل و سپس پریمیوم به آن افزوده می‌شود.</dd></div></dl><footer>برای قیمت جاری اختیار و دارایی پایه، آخرین معامله پیش‌فرض است اما کاربر باید آن را تأیید کند.</footer></article>
+
+            <article id="method-portfolio" class="methodology-card portfolio"><header><span>مالکیت دارایی</span><h3>پرتفوی و میانگین خرید</h3><p>هر خرید مستقل ثبت می‌شود و تجمیع فقط در لایه گزارش انجام می‌گیرد.</p></header><dl><div><dt>میانگین موزون</dt><dd>مجموع بهای تمام‌شده خریدها ÷ مجموع تعداد همان خریدها</dd></div><div><dt>دارایی آزاد</dt><dd>موجودی پایه − تعداد تخصیص‌یافته به کاوردکال</dd></div><div><dt>وثیقه کاوردکال</dt><dd>فقط بخش تخصیص‌یافته؛ با مبنای قیمت همان استراتژی</dd></div><div><dt>جلوگیری از دوباره‌شماری</dt><dd>سود بخش وثیقه‌شده فقط در نتیجه کاوردکال وارد سود کل می‌شود.</dd></div></dl></article>
+
+            <article id="method-performance" class="methodology-card performance"><header><span>معاملات بسته‌شده</span><h3>عملکرد و معیار بدون‌ریسک</h3><p>گزارش عملکرد فقط موقعیت‌های کاملاً بسته را با هزینه‌های ثبت‌شده مقایسه می‌کند.</p></header><div class="methodology-formula" dir="ltr"><b>Risk-free profit</b><code>Capital × 0.40 × Holding days ÷ 365</code></div><dl><div><dt>معاملات چندبخشی</dt><dd>معیار از مجموع سرمایه‌ـ‌روز تمام بخش‌های معامله محاسبه می‌شود.</dd></div><div><dt>سود قبل از کارمزد</dt><dd>سود خالص + همه کارمزدهای ثبت‌شده</dd></div><div><dt>سود مازاد</dt><dd>سود خالص − معیار بدون‌ریسک ۴۰٪ سالانه</dd></div><div><dt>بازده دوره</dt><dd>سود خالص ÷ سرمایه درگیر</dd></div></dl></article>
+
+            <article id="method-data" class="methodology-card data"><header><span>کیفیت و منشأ</span><h3>داده‌ها و محدودیت‌ها</h3><p>خروجی خوب از داده قابل اتکا و فرضیات آشکار شروع می‌شود.</p></header><ul><li><b>قیمت بازار:</b> آخرین معامله، بهترین خرید یا بهترین فروش مطابق مبنای انتخاب‌شده.</li><li><b>تاریخ‌ها:</b> نمایش شمسی و ذخیره استاندارد؛ مدت نگهداری از تاریخ ورود تا خروج محاسبه می‌شود.</li><li><b>افت سرمایه:</b> از نقاط ثبت‌شده ورود، خروج و ارزش‌گذاری جاری محاسبه می‌شود؛ MDD روزانه نیست و افت بین این نقاط را پوشش نمی‌دهد.</li><li><b>تعدیلات شرکتی:</b> سود نقدی، افزایش سرمایه یا split و تغییر ضریب قرارداد فعلاً خودکار اعمال نمی‌شوند و در بازده نمایش‌داده‌شده لحاظ نشده‌اند.</li><li><b>کارمزد:</b> در فرم ورود و خروج از نرخ پیش‌فرض بازار و ارزش معامله محاسبه می‌شود؛ مبلغ پیشنهادی است و کاربر می‌تواند آن را با صورتحساب کارگزاری جایگزین کند.</li><li><b>مدل‌ها:</b> احتمال اعمال و یونانی‌ها برآورد مدل هستند، نه پیش‌بینی قطعی.</li><li><b>داده ناقص:</b> مقدار ناموجود با «—» نمایش داده می‌شود و با عدد ساختگی جایگزین نمی‌گردد.</li></ul></article>
+          </div>
+        </section>
+
+        <section class="overview-market-filter dashboard-legacy-section" data-page-view="overview" aria-label="انتخاب بازار">
+          <header><small>فیلتر بازار</small><h3>برترین‌های کدام بازار نمایش داده شود؟</h3></header>
+          <div class="overview-market-cards" role="group" aria-label="بازار برترین‌ها">
+            <button class="overview-market-card active" type="button" data-overview-market="all" aria-pressed="true"><span class="market-card-title"><span class="market-logo-pair" aria-hidden="true"><img class="market-logo tse-logo" src="/assets/tse-logo.jpeg" alt="" /><img class="market-logo ime-logo" src="/assets/ime-logo.webp" alt="" /></span><b>هر دو بازار</b></span><small>نمایش هم‌زمان بورس تهران و بورس کالا</small></button>
+            <button class="overview-market-card" type="button" data-overview-market="tehran" aria-pressed="false"><span class="market-card-title"><img class="market-logo tse-logo" src="/assets/tse-logo.jpeg" alt="" /><b>بورس تهران</b></span><small>اختیار معامله سهام و صندوق‌های بورسی</small></button>
+            <button class="overview-market-card" type="button" data-overview-market="goods" aria-pressed="false"><span class="market-card-title"><img class="market-logo ime-logo" src="/assets/ime-logo.webp" alt="" /><b>بورس کالا</b></span><small>اختیارهای طلا، نقره، مس و سایر دارایی‌ها</small></button>
+          </div>
+          <div class="filters overview-pricing-controls" aria-label="مبنای قیمت برترین‌ها">
+            <div class="click-option-field"><span>آپشن کاوردکال</span><div class="click-option-group"><button type="button" data-covered-basis="bid">بهترین خرید</button><button type="button" data-covered-basis="ask">بهترین فروش</button><button type="button" data-covered-basis="last">آخرین معامله</button></div></div>
+            <div class="click-option-field"><span>پایه کاوردکال</span><div class="click-option-group"><button type="button" data-covered-base-basis="bid">بهترین خرید</button><button type="button" data-covered-base-basis="ask">بهترین فروش</button><button type="button" data-covered-base-basis="last">آخرین معامله</button></div></div>
+            <div class="click-option-field"><span>آپشن خرید</span><div class="click-option-group"><button type="button" data-long-basis="bid">بهترین خرید</button><button type="button" data-long-basis="ask">بهترین فروش</button><button type="button" data-long-basis="last">آخرین معامله</button></div></div>
+            <div class="click-option-field"><span>پایه استراتژی خرید</span><div class="click-option-group"><button type="button" data-long-base-basis="bid">بهترین خرید</button><button type="button" data-long-base-basis="ask">بهترین فروش</button><button type="button" data-long-base-basis="last">آخرین معامله</button></div></div>
+          </div>
+        </section>
+
+        <section id="topOpportunities" class="top-opportunities dashboard-legacy-section" data-page-view="overview"></section>
+
+        <section id="opportunitiesDashboard" class="opportunities-dashboard" data-page-view="market" aria-live="polite" aria-busy="true">
+          <div class="opportunities-skeleton" aria-label="در حال آماده‌سازی فرصت‌های شناسایی‌شده"><i></i><i></i><i></i><b></b></div>
+        </section>
+
+        <div class="market-workspace" hidden>
+          <aside class="market-filter-rail" aria-label="فیلترهای فرصت‌های بازار">
+          <section class="control-panel">
+          <div class="market-card-filter" aria-label="انتخاب بازار فرصت‌ها">
+            <span>انتخاب بازار</span>
+            <div class="market-selector-cards" role="group" aria-label="بازار">
+              <button class="overview-market-card active" type="button" data-market-card="all" aria-pressed="true"><span class="market-card-title"><span class="market-logo-pair" aria-hidden="true"><img class="market-logo tse-logo" src="/assets/tse-logo.jpeg" alt="" /><img class="market-logo ime-logo" src="/assets/ime-logo.webp" alt="" /></span><b>هر دو بازار</b></span><small>تهران و کالا</small></button>
+              <button class="overview-market-card" type="button" data-market-card="tehran" aria-pressed="false"><span class="market-card-title"><img class="market-logo tse-logo" src="/assets/tse-logo.jpeg" alt="" /><b>بورس تهران</b></span><small>سهام و صندوق‌ها</small></button>
+              <button class="overview-market-card" type="button" data-market-card="goods" aria-pressed="false"><span class="market-card-title"><img class="market-logo ime-logo" src="/assets/ime-logo.webp" alt="" /><b>بورس کالا</b></span><small>طلا، نقره و کالا</small></button>
+            </div>
+          </div>
+          <div class="tabs" role="tablist" aria-label="انتخاب استراتژی">
+            <button class="tab active" data-strategy="all" type="button">همه نتایج</button>
+            <button class="tab" data-strategy="covered" type="button">کاوردکال</button>
+            <button class="tab" data-strategy="long" type="button">خرید اختیار یا پایه</button>
+          </div>
+          <div class="filters">
+            <label>
+              <span>دارایی</span>
+              <select id="assetFilter" aria-label="دارایی"><option value="all">همه دارایی‌ها</option></select>
+            </label>
+            <div class="click-option-field"><span>وضعیت (برای استراتژی خرید)</span><div class="click-option-group" role="group" aria-label="وضعیت"><button type="button" class="active" data-state-filter="all">ITM و OTM</button><button type="button" data-state-filter="ITM">فقط ITM</button><button type="button" data-state-filter="OTM">فقط OTM</button></div></div>
+            <div class="click-option-field"><span>مبنای محاسبه کاوردکال</span><div class="click-option-group" role="group" aria-label="مبنای محاسبه کاوردکال"><button type="button" class="active" data-covered-basis="bid">بهترین خرید</button><button type="button" data-covered-basis="ask">بهترین فروش</button><button type="button" data-covered-basis="last">آخرین معامله</button></div></div>
+            <div class="click-option-field"><span>مبنای قیمت دارایی پایه کاوردکال</span><div class="click-option-group" role="group" aria-label="مبنای قیمت دارایی پایه کاوردکال"><button type="button" data-covered-base-basis="bid">بهترین خرید</button><button type="button" class="active" data-covered-base-basis="ask">بهترین فروش</button><button type="button" data-covered-base-basis="last">آخرین معامله</button></div></div>
+            <div class="click-option-field"><span>رتبه‌بندی پنج کاوردکال برتر</span><div class="click-option-group" role="group" aria-label="رتبه‌بندی کاوردکال"><button type="button" class="active" data-covered-ranking="score">امتیاز جامع</button><button type="button" data-covered-ranking="annual">سود سالانه</button></div></div>
+            <div class="click-option-field"><span>مبنای محاسبه استراتژی خرید</span><div class="click-option-group" role="group" aria-label="مبنای محاسبه استراتژی خرید"><button type="button" data-long-basis="bid">بهترین خرید</button><button type="button" class="active" data-long-basis="last">آخرین معامله</button><button type="button" data-long-basis="ask">بهترین فروش</button></div></div>
+            <div class="click-option-field"><span>مبنای قیمت دارایی پایه استراتژی خرید</span><div class="click-option-group" role="group" aria-label="مبنای قیمت دارایی پایه استراتژی خرید"><button type="button" data-long-base-basis="bid">بهترین خرید</button><button type="button" class="active" data-long-base-basis="ask">بهترین فروش</button><button type="button" data-long-base-basis="last">آخرین معامله</button></div></div>
+            <label>
+              <span>نرخ سود بدون ریسک سالانه</span>
+              <input id="longInterestRateFilter" type="number" min="0" max="200" step="0.5" value="40" inputmode="decimal" aria-label="نرخ سود بدون ریسک سالانه" />
+            </label>
+            <label class="search-field">
+              <span>جست‌وجوی نماد</span>
+              <span class="search-input-wrap"><input id="symbolSearch" type="search" aria-label="جست‌وجوی نماد" placeholder="مثلاً TLME05C…" autocomplete="off" /><button class="search-clear-button hidden" type="button" data-clear-target="symbolSearch" aria-label="پاک‌کردن جست‌وجوی نماد">×</button></span>
+            </label>
+          </div>
+          </section>
+          </aside>
+          <div class="market-results-area">
+            <section id="rulesPanel" class="rules-panel"></section>
+            <div class="dashboard-layout market-dashboard-layout">
+              <div class="dashboard-content"><div id="results"></div></div>
+            </div>
+            <section id="emptyState" class="empty-state hidden">
+              <div>⌕</div><h2>نتیجه‌ای با این فیلترها پیدا نشد</h2><p>فیلتر دارایی، وضعیت یا نماد را تغییر دهید.</p>
+            </section>
+          </div>
+        </div>
+
+        <section class="tehran-chain-panel" data-page-view="tehran-options" aria-labelledby="tehranChainTitle">
+          <header class="tehran-chain-header market-data-header">
+            <div><small id="chainSourceLabel">داده رسمی TSETMC</small><h2 id="tehranChainTitle">داده‌های بازار</h2><p id="chainDescription">مشاهده، جست‌وجو و مقایسه قراردادهای اختیار معامله</p></div>
+            <div class="market-data-header-meta"><span id="marketDataStatus" class="market-data-status neutral">وضعیت بازار اعلام نشده</span><span>آخرین دریافت <b id="marketDataUpdated">—</b></span><span id="marketDataType">آخرین داده دریافت‌شده</span></div>
+            <div class="market-data-header-actions"><button id="marketDataRefresh" class="secondary-button" type="button">↻ به‌روزرسانی</button><a class="secondary-button" href="/methodology">راهنمای داده‌ها</a><button id="marketDataSavedFilters" class="secondary-button" type="button">فیلترهای ذخیره‌شده</button></div>
+          </header>
+          <section class="market-data-kpis" aria-label="خلاصه کیفیت داده بازار">
+            <article><span>قراردادهای قابل مشاهده</span><strong id="tehranChainCount">—</strong></article><article><span>دارایی‌های پایه</span><strong id="marketDataAssetCount">—</strong></article><article><span>مظنه دوطرفه معتبر</span><strong id="marketDataValidQuotes">—</strong><small id="marketDataValidQuotesNote">—</small></article><article><span>اسپرد قابل‌قبول</span><strong id="marketDataLiquidCount">—</strong><small>اسپرد حداکثر ۱۰٪</small></article>
+          </section>
+          <nav class="market-data-view-tabs" aria-label="نوع نمایش داده بازار"><div role="tablist" aria-label="نماهای تحلیلی"><button type="button" role="tab" data-market-data-view="all">همه قراردادها</button><button type="button" role="tab" data-market-data-view="covered_call">نمای کاوردکال</button><button type="button" role="tab" data-market-data-view="long_underlying">نمای خرید اختیار خرید</button></div><p>این نما ابزار تحلیل است و به‌منزله پیشنهاد معامله نیست.</p></nav>
+          <div class="chain-workspace">
+          <aside class="chain-filter-rail market-filter-rail" aria-label="فیلترهای جدول جامع">
+            <section class="control-panel">
+            <div class="market-card-filter" aria-label="انتخاب بازار جدول جامع">
+              <span>انتخاب بازار</span>
+              <div class="market-selector-cards chain-market-selector" role="group" aria-label="بازار">
+                <button class="overview-market-card active" type="button" data-chain-filter-target="chainMarket" data-chain-filter-value="tehran" aria-pressed="true"><span class="market-card-title"><img class="market-logo tse-logo" src="/assets/tse-logo.jpeg" alt="" /><b>بورس تهران</b></span><small>سهام و صندوق‌ها</small></button>
+                <button class="overview-market-card" type="button" data-chain-filter-target="chainMarket" data-chain-filter-value="goods" aria-pressed="false"><span class="market-card-title"><img class="market-logo ime-logo" src="/assets/ime-logo.webp" alt="" /><b>بورس کالا</b></span><small>طلا، نقره و کالا</small></button>
+              </div>
+              <select id="chainMarket" class="hidden" aria-label="بازار"><option value="tehran">بورس تهران</option><option value="goods">بورس کالا</option></select>
+            </div>
+            <div class="click-option-field market-data-legacy-strategy"><span>استراتژی</span><div class="click-option-group chain-strategy-options" role="group" aria-label="انتخاب استراتژی"><button type="button" data-chain-filter-target="chainStrategy" data-chain-filter-value="covered_call">کاوردکال</button><button type="button" data-chain-filter-target="chainStrategy" data-chain-filter-value="long_underlying">خرید اختیار یا پایه</button></div><select id="chainStrategy" class="hidden" aria-label="استراتژی"><option value="covered_call">کاوردکال</option><option value="long_underlying">خرید اختیار یا دارایی پایه</option></select></div>
+            <div class="click-option-field chain-covered-pricing"><span>قیمت اختیار کاوردکال</span><div class="click-option-group"><button type="button" data-covered-basis="bid">بهترین خرید</button><button type="button" data-covered-basis="ask">بهترین فروش</button><button type="button" data-covered-basis="last">آخرین معامله</button></div></div>
+            <div class="click-option-field chain-covered-pricing"><span>قیمت پایه کاوردکال</span><div class="click-option-group"><button type="button" data-covered-base-basis="bid">بهترین خرید</button><button type="button" data-covered-base-basis="ask">بهترین فروش</button><button type="button" data-covered-base-basis="last">آخرین معامله</button></div></div>
+            <div class="click-option-field chain-long-pricing"><span>قیمت اختیار خرید</span><div class="click-option-group"><button type="button" data-long-basis="bid">بهترین خرید</button><button type="button" data-long-basis="ask">بهترین فروش</button><button type="button" data-long-basis="last">آخرین معامله</button></div></div>
+            <div class="click-option-field chain-long-pricing"><span>قیمت پایه استراتژی خرید</span><div class="click-option-group"><button type="button" data-long-base-basis="bid">بهترین خرید</button><button type="button" data-long-base-basis="ask">بهترین فروش</button><button type="button" data-long-base-basis="last">آخرین معامله</button></div></div>
+            <div class="filters chain-filters">
+              <label class="search-field"><span>جست‌وجوی نماد</span><span class="search-input-wrap"><input id="tehranChainSearch" type="search" placeholder="مثلاً شستا یا ضستا…" /><button class="search-clear-button hidden" type="button" data-clear-target="tehranChainSearch" aria-label="پاک‌کردن جست‌وجوی جدول جامع">×</button></span></label>
+              <div class="click-option-field"><span>وضعیت اعمال</span><div class="click-option-group chain-state-options" role="group" aria-label="وضعیت اعمال"><button type="button" data-chain-filter-target="tehranChainState" data-chain-filter-value="all">همه</button><button type="button" data-chain-filter-target="tehranChainState" data-chain-filter-value="ITM">ITM</button><button type="button" data-chain-filter-target="tehranChainState" data-chain-filter-value="OTM">OTM</button><button type="button" data-chain-filter-target="tehranChainState" data-chain-filter-value="ATM">ATM</button></div><select id="tehranChainState" class="hidden" aria-label="وضعیت اعمال"><option value="all">همه</option><option value="ITM">ITM</option><option value="OTM">OTM</option><option value="ATM">ATM</option></select></div>
+              <label class="numeric-condition"><span>درصد ITM</span><span class="condition-control"><select id="tehranChainItmOperator" aria-label="عملگر درصد ITM"><option value="gte">بیشتر یا مساوی ≥</option><option value="gt">بیشتر از &gt;</option><option value="lte">کمتر یا مساوی ≤</option><option value="lt">کمتر از &lt;</option><option value="eq">مساوی =</option></select><input id="tehranChainItmValue" type="number" step="0.1" placeholder="عدد" aria-label="مقدار درصد ITM" /></span></label>
+              <div class="click-option-field"><span>صف نماد پایه</span><div class="click-option-group chain-queue-options" role="group" aria-label="وضعیت صف نماد پایه"><button type="button" data-chain-filter-target="tehranChainQueue" data-chain-filter-value="all">همه</button><button type="button" data-chain-filter-target="tehranChainQueue" data-chain-filter-value="صف خرید">صف خرید</button><button type="button" data-chain-filter-target="tehranChainQueue" data-chain-filter-value="صف فروش">صف فروش</button><button type="button" data-chain-filter-target="tehranChainQueue" data-chain-filter-value="عادی">عادی</button><button type="button" data-chain-filter-target="tehranChainQueue" data-chain-filter-value="نامشخص">نامشخص</button></div><select id="tehranChainQueue" class="hidden" aria-label="صف نماد پایه"><option value="all">همه وضعیت‌ها</option><option value="صف خرید">صف خرید</option><option value="صف فروش">صف فروش</option><option value="عادی">عادی</option><option value="نامشخص">نامشخص</option></select></div>
+              <label class="numeric-condition"><span>ارزش معاملات اختیار</span><span class="condition-control"><select id="tehranChainTransactionOperator" aria-label="عملگر ارزش معاملات اختیار"><option value="gte">بیشتر یا مساوی ≥</option><option value="gt">بیشتر از &gt;</option><option value="lte">کمتر یا مساوی ≤</option><option value="lt">کمتر از &lt;</option><option value="eq">مساوی =</option></select><input id="tehranChainTransactionValue" type="number" min="0" step="1" value="0" aria-label="مقدار ارزش معاملات اختیار" /></span></label>
+              <label class="numeric-condition"><span>روز تا سررسید</span><span class="condition-control"><select id="tehranChainDaysOperator" aria-label="عملگر روز تا سررسید"><option value="gt">بیشتر از &gt;</option><option value="gte">بیشتر یا مساوی ≥</option><option value="lt">کمتر از &lt;</option><option value="lte">کمتر یا مساوی ≤</option><option value="eq">مساوی =</option></select><input id="tehranChainDaysMin" type="number" min="0" step="1" placeholder="عدد" aria-label="مقدار روز تا سررسید" /></span></label>
+              <details class="market-data-more-filters"><summary>فیلترهای بیشتر</summary><div>
+                <label><span>حداقل قیمت اعمال</span><input id="marketStrikeMin" type="number" min="0" step="1" placeholder="بدون محدودیت" /></label>
+                <label><span>حداکثر قیمت اعمال</span><input id="marketStrikeMax" type="number" min="0" step="1" placeholder="بدون محدودیت" /></label>
+                <label><span>حداقل حجم معاملات</span><input id="marketVolumeMin" type="number" min="0" step="1" placeholder="بدون محدودیت" /></label>
+                <label><span>حداقل موقعیت باز</span><input id="marketOpenInterestMin" type="number" min="0" step="1" placeholder="بدون محدودیت" /></label>
+                <label class="market-valid-quotes"><input id="marketValidQuotesOnly" type="checkbox" /><span>فقط مظنه خرید و فروش معتبر</span></label>
+              </div></details>
+              <label id="chainAnnualReturnField"><span>حداقل سود سالانه (درصد)</span><input id="tehranChainAnnualMin" type="number" step="0.1" placeholder="مثلاً ۶۳" /></label>
+              <label id="chainInterestRateField"><span>نرخ سود بدون ریسک سالانه</span><input id="chainLongInterestRate" type="number" min="0" max="200" step="0.5" value="40" inputmode="decimal" /></label>
+              <button id="toggleColumnManager" class="chain-reset-columns" type="button" aria-expanded="false" aria-controls="chainColumnManager"><span>☷</span> تنظیم ستون‌ها و نماها</button>
+              <button id="resetChainColumns" class="chain-reset-columns" type="button"><span>↺</span> بازنشانی ترتیب ستون‌ها</button>
+            </div>
+            </section>
+          </aside>
+          <div class="chain-main-content">
+          <section id="chainColumnManager" class="chain-column-manager hidden" aria-label="شخصی‌سازی ستون‌های جدول">
+            <header>
+              <div><strong>شخصی‌سازی ستون‌ها</strong><small>ستون‌های دلخواه را پنهان کنید و چیدمان فعلی را به‌عنوان یک نمای اختصاصی نگه دارید.</small></div>
+              <span id="chainColumnManagerStatus">—</span>
+            </header>
+            <div id="chainColumnChecklist" class="chain-column-checklist"></div>
+            <div class="chain-view-controls">
+              <label><span>نام نمای جدید</span><input id="chainViewName" type="text" maxlength="40" placeholder="مثلاً تحلیل نقدشوندگی" autocomplete="off" /></label>
+              <button id="saveChainView" type="button">ذخیره نمای فعلی</button>
+              <label><span>نماهای ذخیره‌شده</span><select id="savedChainViews" aria-label="نماهای ذخیره‌شده"><option value="">یک نما را انتخاب کنید</option></select></label>
+              <button id="loadChainView" type="button">بارگذاری نما</button>
+              <button id="deleteChainView" type="button" class="danger-subtle">حذف نما</button>
+              <button id="showAllChainColumns" type="button">نمایش همه ستون‌ها</button>
+            </div>
+            <p id="chainViewMessage" class="chain-view-message" aria-live="polite"></p>
+          </section>
+          <div class="chain-table-wrap">
+            <table class="chain-table">
+              <thead id="strategyTableHead"></thead>
+              <tbody id="tehranChainBody"></tbody>
+            </table>
+          </div>
+          <p id="chainMethodNote" class="chain-method-note">مبنای محاسبه: خرید دارایی پایه با بهترین پیشنهاد فروش و فروش اختیار خرید با بهترین پیشنهاد خرید.</p>
+          </div>
+          </div>
+        </section>
+
+        <div class="trade-page-layout" data-page-view="trades">
+        <aside class="trade-control-sidebar" aria-label="کنترل معاملات باز">
+          <header><small>پنل معاملات باز</small><strong>فیلتر و عملیات</strong></header>
+          <div class="trade-sidebar-group"><span>نوع معامله</span><div class="trade-filter-options">
+            <button type="button" class="active" data-trade-strategy-filter="open" data-value="all">همه معاملات</button>
+            <button type="button" data-trade-strategy-filter="open" data-value="covered_call">کاوردکال</button>
+            <button type="button" data-trade-strategy-filter="open" data-value="long_call">خرید اختیار</button>
+          </div></div>
+          <div class="trade-sidebar-group"><span>نوع نمایش</span><div class="trade-filter-options two">
+            <button type="button" class="active" data-trade-view-mode="open" data-value="summary">خلاصه</button>
+            <button type="button" data-trade-view-mode="open" data-value="full">کامل</button>
+          </div></div>
+          <button type="button" class="primary-button trade-sidebar-action" data-open-trade-form>+ ثبت معامله جدید</button>
+          <button type="button" class="secondary-button trade-sidebar-action" data-open-underlying-form>+ خرید دارایی پایه</button>
+          <span id="openTradeSidebarCount" class="calculator-badge">۰ معامله</span>
+        </aside>
+
+        <section class="trades-panel" data-page-view="trades" aria-labelledby="tradesTitle">
+          <header class="trades-header">
+            <div><small>پرتفوی اختیار معامله</small><h2 id="tradesTitle">معاملات من</h2><p>معامله کاوردکال یا خرید اختیار را ثبت کنید؛ قیمت خروج مناسب هر استراتژی با تازه‌سازی بازار خوانده می‌شود.</p></div>
+            <div class="trades-header-actions"><button id="exportOpenTrades" class="secondary-button" type="button">دریافت خروجی CSV</button><span id="tradesCount" class="calculator-badge">۰ معامله</span></div>
+          </header>
+          <section id="openTradesDashboard" class="open-trades-dashboard" aria-live="polite" aria-busy="true">
+            <div class="open-trades-skeleton" aria-label="در حال آماده‌سازی معاملات باز">
+              <i></i><i></i><i></i><i></i><i></i>
+            </div>
+          </section>
+          <div class="trade-bulk-bar" data-bulk-status="open">
+            <label><input type="checkbox" data-trade-select-all="open" /><span>انتخاب همه معاملات باز</span></label>
+            <span data-trade-selected-count="open">۰ انتخاب</span>
+            <button class="danger-button" type="button" data-trade-bulk-delete="open" disabled>حذف انتخاب‌شده‌ها</button>
+          </div>
+          <section id="tradeValuationControls" class="trade-valuation-controls" aria-label="مبنای ارزش‌گذاری معاملات باز">
+            <header class="trade-valuation-heading"><span>مبنای محاسبات</span><small>قیمت مرجع هر جزء را برای نمایش سود و زیان انتخاب کنید.</small></header>
+            <article>
+              <strong>کاوردکال</strong>
+              <div><span>پرمیوم</span><div class="click-option-group"><button type="button" class="active" data-trade-covered-option="last">آخرین معامله</button><button type="button" data-trade-covered-option="bid">بهترین خرید</button><button type="button" data-trade-covered-option="ask">بهترین فروش</button></div></div>
+              <div><span>دارایی پایه</span><div class="click-option-group"><button type="button" class="active" data-trade-covered-base="last">آخرین معامله</button><button type="button" data-trade-covered-base="bid">بهترین خرید</button><button type="button" data-trade-covered-base="ask">بهترین فروش</button></div></div>
+            </article>
+            <article>
+              <strong>خرید اختیار خرید</strong>
+              <div><span>پرمیوم</span><div class="click-option-group"><button type="button" class="active" data-trade-long-option="last">آخرین معامله</button><button type="button" data-trade-long-option="bid">بهترین خرید</button><button type="button" data-trade-long-option="ask">بهترین فروش</button></div></div>
+              <div><span>دارایی پایه</span><div class="click-option-group"><button type="button" class="active" data-trade-long-base="last">آخرین معامله</button><button type="button" data-trade-long-base="bid">بهترین خرید</button><button type="button" data-trade-long-base="ask">بهترین فروش</button></div></div>
+            </article>
+          </section>
+          <section id="portfolioAssetLedger" class="portfolio-asset-ledger" aria-labelledby="portfolioAssetLedgerTitle">
+            <header class="portfolio-asset-ledger-header">
+              <div>
+                <small>تصویر دارایی‌های حساب</small>
+                <h3 id="portfolioAssetLedgerTitle">دفتر تخصیص دارایی</h3>
+                <p>هر خرید مستقل می‌ماند؛ موجودی آزاد و وثیقهٔ کاوردکال جدا نمایش داده می‌شوند تا یک دارایی دوبار شمرده نشود.</p>
+              </div>
+              <div class="portfolio-asset-ledger-actions">
+                <button type="button" class="secondary-button" data-open-underlying-form>ثبت خرید دارایی</button>
+                <button type="button" class="secondary-button" data-focus-account-cash>تنظیم وجه نقد</button>
+              </div>
+            </header>
+            <div class="portfolio-asset-ledger-metrics" aria-label="ترکیب بهای تمام‌شده دارایی‌های ثبت‌شده">
+              <article class="cash"><span>وجه نقد</span><strong id="portfolioLedgerCash">۰</strong><small id="portfolioLedgerCashNote">مانده ثبت‌شده در حساب</small></article>
+              <article class="free"><span>دارایی پایه آزاد</span><strong id="portfolioLedgerFreeBase">۰</strong><small id="portfolioLedgerFreeBaseNote">۰ دارایی · ۰ واحد</small></article>
+              <article class="collateral"><span>وثیقهٔ کاوردکال</span><strong id="portfolioLedgerCollateral">۰</strong><small id="portfolioLedgerCollateralNote">۰ دارایی · ۰ واحد</small></article>
+              <article class="options"><span>اختیارهای خرید</span><strong id="portfolioLedgerLongCalls">۰</strong><small id="portfolioLedgerLongCallsNote">۰ معامله باز</small></article>
+            </div>
+            <div id="portfolioClassAllocationChart" class="portfolio-class-allocation-chart" aria-live="polite"></div>
+            <details class="portfolio-ledger-details">
+              <summary><span>جزئیات تخصیص و دارایی‌ها</span><b><i>بیشتر</i><i>کمتر</i></b></summary>
+              <div id="portfolioAssetLineChart" class="portfolio-asset-line-chart" aria-live="polite"></div>
+              <div class="portfolio-base-allocation-summary" aria-label="تفکیک کل دارایی پایه میان موجودی آزاد و وثیقه کاوردکال">
+              <div class="portfolio-base-allocation-heading">
+                <div><span>کل بهای دارایی پایه</span><strong id="portfolioLedgerBaseTotal">۰</strong></div>
+                <small id="portfolioLedgerBaseTotalNote">۰ دارایی پایه</small>
+              </div>
+              <div class="portfolio-allocation-labels">
+                <span>دارایی پایه آزاد <b id="portfolioLedgerFreeSplit">۰ · ۰٪</b></span>
+                <span>وثیقهٔ کاوردکال <b id="portfolioLedgerCollateralSplit">۰ · ۰٪</b></span>
+              </div>
+              <div class="portfolio-allocation-track" role="img" aria-label="تقسیم کل دارایی پایه میان موجودی آزاد و وثیقه کاوردکال">
+                <i id="portfolioLedgerFreeBar" class="free" style="width:0%"></i>
+                <i id="portfolioLedgerCollateralBar" class="collateral" style="width:0%"></i>
+              </div>
+              <p>سود و زیان تغییر قیمت وثیقه برای شفافیت نمایش داده می‌شود، اما در سود نهایی پرتفوی دوباره جمع نمی‌شود.</p>
+              </div>
+              <div class="portfolio-asset-ledger-total">
+              <div><span>بهای تمام‌شده دارایی‌های ثبت‌شده</span><strong id="portfolioLedgerTrackedTotal">۰</strong></div>
+              <p>این عدد ترکیب دارایی‌هاست، نه ارزش فعلی حساب. ارزش‌گذاری و سود هر استراتژی در کارت‌های پایین صفحه محاسبه می‌شود.</p>
+              </div>
+              <div id="portfolioAssetLedgerList" class="portfolio-asset-ledger-list" aria-live="polite">
+              <div class="trades-empty">برای ساخت تصویر دارایی، وجه نقد یا اولین خرید را ثبت کنید.</div>
+              </div>
+            </details>
+          </section>
+          <section id="openTradesSummary" class="portfolio-summary profit-performance-section" data-page-view="trades" aria-label="خلاصه مالی معاملات باز">
+            <article class="portfolio-summary-group total">
+              <header><div><small>کل معاملات باز</small><h3>جمع پرتفوی</h3></div><span id="portfolioTotalCount">۰ معامله</span></header>
+              <div class="portfolio-summary-metrics">
+                <div><span>کل نقدینگی درگیر دو استراتژی</span><strong id="portfolioTotalCapital">۰</strong><small>فقط کاوردکال + خرید اختیار خرید</small></div>
+                <div><span>سود تجمیعی نوسان قیمت</span><strong id="portfolioTotalProfit">۰</strong><small id="portfolioTotalProfitNote">بدون وجه نقد و دارایی پایه آزاد</small></div>
+              </div>
+              <details class="portfolio-summary-details asset-portfolio-details">
+                <summary><span>نقدینگی و سود به تفکیک دارایی پایه</span><b><i>بیشتر</i><i>کمتر</i></b></summary>
+                <div id="openPortfolioByAsset" class="asset-portfolio-breakdown"><div class="trades-empty">معامله بازی ثبت نشده است.</div></div>
+              </details>
+            </article>
+            <article class="portfolio-summary-group covered">
+              <header><div><small>استراتژی اول</small><h3>کاوردکال</h3></div><span id="portfolioCoveredCount">۰ معامله</span></header>
+              <div class="portfolio-summary-metrics primary strategy-primary">
+                <div class="strategy-liquidity-card"><div><span>نقدینگی درگیر کاوردکال</span><strong id="portfolioCoveredCapital">۰</strong><small>پایه − پرمیوم + کارمزد</small><b id="portfolioCoveredLiquidityShare">۰٪ از کل نقدینگی</b></div><div id="portfolioCoveredLiquidityChart" class="mini-liquidity-chart"></div></div>
+                <div class="strategy-profit-card"><span>سود نوسان کاوردکال</span><strong id="portfolioCoveredExpected">۰ (۰٪)</strong><small id="portfolioCoveredExpectedNote">نوسان اختیار + نوسان دارایی پایه</small></div>
+              </div>
+              <details class="portfolio-summary-details">
+                <summary><span>سایر محاسبات کاوردکال</span><b><i>بیشتر</i><i>کمتر</i></b></summary>
+                <div class="portfolio-summary-metrics">
+                  <div><span>آفست اختیار + فروش پایه</span><strong id="portfolioCoveredSelectedLiquidation">۰</strong><small id="portfolioCoveredSelectedLiquidationNote">بر اساس مبنای قیمت انتخابی</small></div>
+                  <div><span>آفست اختیار + نگهداری پایه</span><strong id="portfolioCoveredOptionOnly">۰</strong><small id="portfolioCoveredOptionOnlyNote">بدون فروش دارایی پایه</small></div>
+                </div>
+              </details>
+            </article>
+            <article class="portfolio-summary-group long">
+              <header><div><small>استراتژی دوم</small><h3>خرید اختیار خرید</h3></div><span id="portfolioLongCount">۰ معامله</span></header>
+              <div class="portfolio-summary-metrics primary strategy-primary">
+                <div class="strategy-liquidity-card"><div><span>نقدینگی درگیر خرید اختیار</span><strong id="portfolioLongCapital">۰</strong><small>پرمیوم پرداختی + کارمزد</small><b id="portfolioLongLiquidityShare">۰٪ از کل نقدینگی</b></div><div id="portfolioLongLiquidityChart" class="mini-liquidity-chart"></div></div>
+                <div class="strategy-profit-card"><span>سود نوسان اختیار خرید</span><strong id="portfolioLongOffset">۰ (۰٪)</strong><small id="portfolioLongOffsetNote">فقط تغییر قیمت اختیار</small></div>
+              </div>
+              <details class="portfolio-summary-details">
+                <summary><span>سایر محاسبات خرید اختیار</span><b><i>بیشتر</i><i>کمتر</i></b></summary>
+                <div class="portfolio-summary-metrics">
+                  <div><span>اعمال همه اختیارها</span><strong id="portfolioLongExercise">۰</strong><small id="portfolioLongExerciseNote">قیمت پایه منهای سربه‌سر اعمال</small></div>
+                  <div><span>سود بر اساس تخصیص ثبت‌شده</span><strong id="portfolioLongProfit">۰</strong><small id="portfolioLongProfitNote">بخش اعمال + بخش نوسان‌گیری پرمیوم</small></div>
+                  <div class="long-exercise-cash-card"><span>نقدینگی لازم برای اعمال</span><strong id="portfolioLongAllocatedExerciseCash">۰</strong><small>قراردادهای خریداری‌شده با هدف اعمال</small><hr><span>اعمال همه قراردادها</span><b id="portfolioLongAllExerciseCash">۰</b><small>هدف اعمال + هدف نوسان‌گیری</small></div>
+                </div>
+              </details>
+            </article>
+          </section>
+          <section class="account-growth-panel profit-performance-section" data-page-view="trades" aria-labelledby="accountGrowthTitle">
+            <header>
+              <div><small>عملکرد پرتفوی</small><h3 id="accountGrowthTitle">نمودار رشد حساب</h3><p>ارزش حساب بر اساس سرمایه اولیه، سود قطعی و ارزش‌گذاری جاری معاملات باز.</p></div>
+              <span id="accountGrowthUpdated">—</span>
+            </header>
+            <div class="account-growth-chart-shell">
+              <div class="account-growth-chart-toolbar">
+                <div class="account-growth-legend" aria-label="راهنمای نمودار">
+                  <span class="trend">روند ارزش حساب</span><span class="baseline">سرمایه اولیه</span><span class="current">ارزش امروز</span>
+                </div>
+                <div><strong id="accountGrowthPeriod">—</strong><small id="accountGrowthPointCount">۰ رویداد ثبت‌شده</small></div>
+              </div>
+              <p id="accountGrowthTrendSummary" class="account-growth-trend-summary">برای محاسبه روند، ابتدا یک معامله ثبت کنید.</p>
+              <div id="accountGrowthChart" class="account-growth-chart"><div class="trades-empty">برای نمایش نمودار، ابتدا یک معامله ثبت کنید.</div></div>
+              <p class="account-growth-note">نقاط میانی فقط رویدادهای ورود و خروج ثبت‌شده هستند؛ چون ارزش تاریخی روزانه معاملات ذخیره نشده، سود شناور معاملات باز فقط در نقطه امروز اعمال می‌شود. بازده‌های ماهانه و سالانه میانگین مرکب‌اند.</p>
+            </div>
+            <details class="account-growth-secondary">
+              <summary><span>اطلاعات تکمیلی رشد حساب</span><b><i>بیشتر</i><i>کمتر</i></b></summary>
+              <div class="account-growth-overview" aria-label="خلاصه رشد حساب">
+                <article class="equity"><span>ارزش فعلی حساب</span><strong id="accountCurrentEquity">۰</strong><small id="accountGrowthCapital">سرمایه اولیه ۰</small></article>
+                <article class="return"><span>رشد کل حساب</span><strong id="accountGrowthReturn">۰٪</strong><small id="accountGrowthTotalNote">سود و زیان فعلی ۰</small></article>
+                <article><span>سود قطعی</span><strong id="accountGrowthRealized">۰</strong><small>نتیجه معاملات بسته‌شده</small></article>
+                <article><span>ارزش‌گذاری معاملات باز</span><strong id="accountGrowthOpen">۰</strong><small id="accountGrowthOpenNote">۰ معامله قیمت‌گذاری‌شده</small></article>
+              </div>
+              <div class="account-growth-kpis">
+                <div><span>میانگین بازده ماهانه</span><strong id="accountAverageMonthly">—</strong><small>میانگین مرکب دوره</small></div>
+                <div><span>میانگین بازده سالانه</span><strong id="accountAverageAnnual">—</strong><small id="accountTrackingDays">از شروع ثبت معاملات</small></div>
+                <div><span>نقدینگی ثبت‌شده در معاملات</span><strong id="accountGrowthInvested">۰</strong><small id="accountGrowthCounts">۰ باز · ۰ بسته</small></div>
+                <div id="accountMddCard" class="risk hidden"><span id="accountMddLabel">افت سرمایه در نقاط ثبت‑شده</span><strong id="accountMdd">—</strong><small id="accountMddNote">—</small></div>
+                <div><span>میانگین حضور در معاملات</span><strong id="accountAverageHolding">—</strong><small>تمام معاملات باز و بسته</small></div>
+                <div><span>میانگین حضور کاوردکال</span><strong id="accountAverageCoveredHolding">—</strong><small>از ورود تا خروج یا امروز</small></div>
+                <div><span>میانگین حضور خرید اختیار</span><strong id="accountAverageLongHolding">—</strong><small>از ورود تا خروج یا امروز</small></div>
+                <div><span>میانگین نگهداری دارایی پایه</span><strong id="accountAverageUnderlyingHolding">—</strong><small>فقط خریدهای مستقل دارایی پایه</small></div>
+              </div>
+              <details class="account-growth-events">
+              <summary><span>رویدادهای مؤثر بر رشد حساب</span><b><i>بیشتر</i><i>کمتر</i></b></summary>
+              <div class="account-growth-events-table-wrap">
+                <table class="account-growth-events-table">
+                  <thead><tr><th>تاریخ</th><th>رویداد</th><th>تغییر قطعی</th><th>ارزش حساب</th></tr></thead>
+                  <tbody id="accountGrowthEvents"><tr><td colspan="4">هنوز رویدادی ثبت نشده است.</td></tr></tbody>
+                </table>
+              </div>
+              </details>
+              <details class="account-growth-expand account-growth-settings">
+              <summary><span>تنظیم سرمایه اولیه و وجه نقد</span><b><i>بیشتر</i><i>کمتر</i></b></summary>
+              <div class="account-growth-expand-body">
+                <form id="accountCapitalForm" class="account-capital-form" novalidate>
+                  <label><span>سرمایه اولیه حساب</span><input name="initial_capital" type="number" min="0" step="any" placeholder="مثلاً ۱٬۰۰۰٬۰۰۰٬۰۰۰" /></label>
+                  <label><span>وجه نقد فعلی</span><input name="cash_balance" type="number" min="0" step="any" placeholder="مانده نقد قابل استفاده" /></label>
+                  <button class="primary-button" type="submit">ذخیره اطلاعات حساب</button>
+                  <button id="accountCapitalAuto" class="secondary-button" type="button">محاسبه خودکار</button>
+                  <small id="accountCapitalSource">اگر مبلغی ثبت نشود، بیشترین نقدینگی هم‌زمان درگیر مبنا قرار می‌گیرد.</small>
+                </form>
+              </div>
+              </details>
+            </details>
+          </section>
+          <div id="tradeFormSlot" class="trade-form-slot">
+          <form id="tradeForm" class="trade-form" novalidate>
+            <input name="trade_id" type="hidden" />
+            <label><span>نوع معامله</span><select name="strategy_type" required><option value="covered_call">کاوردکال</option><option value="long_call">خرید اختیار خرید</option><option value="underlying">خرید دارایی پایه</option></select></label>
+            <label><span>بازار</span><select name="market" required><option value="tehran">بورس تهران</option><option value="goods">بورس کالا</option></select></label>
+            <label><span>نام نماد پایه</span><input name="asset" type="text" list="tradeAssetOptions" placeholder="مثلاً اهرم" autocomplete="off" required /><datalist id="tradeAssetOptions"></datalist></label>
+            <label><span>روش شناسایی قرارداد</span><select name="contract_entry_mode"><option value="live">انتخاب از قراردادهای جاری بازار</option><option value="manual_expired">ورود دستی قرارداد منقضی‌شده</option></select><small>برای قرارداد حذف‌شده از فید بازار، حالت ورود دستی را انتخاب کنید.</small></label>
+            <label id="tradeLiveContractField"><span>قراردادهای مرتبط</span><select name="option_symbol" class="ltr-input" required disabled><option value="">ابتدا نام نماد پایه را بنویسید</option></select></label>
+            <fieldset id="tradeManualContractFields" class="trade-manual-contract hidden">
+              <legend>مشخصات قرارداد منقضی‌شده</legend>
+              <p>اطلاعات را مطابق اطلاعیه یا سابقه کارگزاری وارد کنید. این قرارداد قیمت زنده نخواهد داشت.</p>
+              <label><span>نماد اختیار</span><input name="manual_option_symbol" class="ltr-input" type="text" autocomplete="off" placeholder="مثلاً ضهرم۶۰۴۵" /></label>
+              <label><span>قیمت اعمال</span><input name="manual_strike" type="number" min="0.000001" step="any" placeholder="مثلاً ۱۰۰۰" /></label>
+              <label><span>تاریخ سررسید</span><input name="manual_expiry" class="ltr-input" type="text" inputmode="numeric" placeholder="۱۴۰۵/۰۵/۳۱ یا 2026-08-22" /><small>سررسید باید گذشته یا امروز باشد.</small></label>
+              <label><span>اندازه قرارداد</span><input name="manual_contract_size" type="number" min="0.000001" step="any" value="1000" /><small>تعداد واحد دارایی پایه در هر قرارداد طبق مشخصات بازار.</small></label>
+            </fieldset>
+            <label id="tradeUnderlyingSourceModeField"><span>روش تأمین دارایی پایه کاوردکال</span><select name="underlying_source_mode"><option value="existing">تخصیص از موجودی قبلی</option><option value="new">خرید جدید هم‌زمان با کاوردکال</option></select></label>
+            <label id="tradeUnderlyingPositionField"><span>دارایی پایه تأمین‌کننده کاوردکال</span><select name="underlying_position_id"><option value="">ابتدا دارایی پایه را ثبت کنید</option></select><small id="tradeUnderlyingPositionMeta">موجودی تخصیص‌یافته تا زمان خروج در بخش دارایی مستقل محاسبه نمی‌شود.</small></label>
+            <label id="tradeNewUnderlyingCommissionField" class="hidden"><span>کارمزد خرید دارایی پایه</span><input name="underlying_purchase_commission" type="number" min="0" step="any" value="0" /><small>براساس قیمت و تعداد به‌صورت خودکار محاسبه می‌شود و قابل ویرایش است.</small></label>
+            <div id="tradeContractMeta" class="trade-contract-meta">با انتخاب قرارداد، مشخصات بازار اینجا نمایش داده می‌شود.</div>
+            <div class="trade-date-field"><span>تاریخ ورود شمسی</span><div class="jalali-input-wrap"><input name="entry_date" class="ltr-input" type="text" inputmode="none" placeholder="۱۴۰۵/۰۵/۱۲" readonly required /><button id="entryDatePickerButton" class="jalali-picker-button" type="button" aria-label="انتخاب تاریخ ورود از تقویم شمسی" aria-expanded="false">تقویم</button><div id="entryDatePicker" class="jalali-date-picker hidden" role="dialog" aria-label="تقویم انتخاب تاریخ ورود"></div></div></div>
+            <label><span id="tradeBaseEntryLabel">قیمت روز پایه هنگام اجرای استراتژی</span><input name="entry_base_price" type="number" min="0" step="any" placeholder="۲۴۱۰" required /><small id="tradeBaseEntryHint">برای محاسبه دقیق کاوردکال، قیمت روز را وارد کنید؛ نه بهای خرید تاریخی دارایی.</small></label>
+            <label><span id="tradePremiumLabel">پرمیوم دریافتی</span><input name="entry_premium" type="number" min="0" step="any" placeholder="۱۸۳" required /></label>
+            <label id="tradeInterestRateField" class="hidden"><span>نرخ بهره سالانه</span><input name="annual_interest_rate" type="number" min="0" step="any" value="40" /></label>
+            <label id="tradeQuantityField"><span id="tradeQuantityLabel">تعداد قرارداد</span><input name="quantity" type="number" min="1" step="1" value="1" required /><small>مقدار دارایی پایه از حاصل تعداد قرارداد × اندازه قرارداد محاسبه می‌شود.</small></label>
+            <label id="tradeExerciseQuantityField" class="hidden"><span id="tradeExerciseQuantityLabel">تعداد قرارداد با هدف اعمال</span><input name="exercise_quantity" type="number" min="0" step="1" value="0" /></label>
+            <label id="tradePremiumQuantityField" class="hidden"><span id="tradePremiumQuantityLabel">تعداد قرارداد با هدف نوسان‌گیری پرمیوم</span><input name="premium_trade_quantity" type="number" min="0" step="1" value="1" /></label>
+            <label id="tradeCommissionField"><span id="tradeCommissionLabel">کارمزد فروش اختیار</span><input name="commission" type="number" min="0" step="any" value="0" /><small id="tradeCommissionHint">به‌صورت خودکار محاسبه می‌شود و قابل ویرایش است.</small></label>
+            <input name="option_exit_commission_estimate" type="hidden" value="0" />
+            <input name="exercise_commission_estimate" type="hidden" value="0" />
+            <input name="underlying_exit_commission_estimate" type="hidden" value="0" />
+            <label class="trade-entry-confirmation">
+              <input id="tradeEntryConfirmation" name="price_confirmed" type="checkbox" value="true" required />
+              <span>اطلاعات معامله، قیمت‌ها، تعداد و تاریخ ورود را بررسی کردم و صحت آن‌ها را تأیید می‌کنم.</span>
+            </label>
+            <div class="trade-form-actions"><button class="primary-button" type="submit">ثبت معامله</button><button id="tradeCancelEdit" class="secondary-button hidden" type="button">لغو ویرایش</button></div>
+          </form>
+          </div>
+          <div id="underlyingFormSlot" class="trade-form-slot">
+            <form id="underlyingForm" class="trade-form underlying-form" novalidate>
+              <input name="position_id" type="hidden" />
+              <label><span>نوع معامله</span><select name="entry_kind" required><option value="covered_call">کاوردکال</option><option value="long_call">خرید اختیار خرید</option><option value="underlying" selected>خرید دارایی پایه</option></select></label>
+              <label><span>روش خرید دارایی پایه</span><select name="acquisition_method" required><option value="direct">خرید مستقیم</option><option value="exercise">خرید از طریق اعمال اختیار خرید</option></select></label>
+              <label id="underlyingExerciseModeField" class="hidden"><span>روش ورود اطلاعات اعمال</span><select name="exercise_entry_mode"><option value="trade">انتخاب از معاملات اختیار خرید</option><option value="manual">ورود دستی اطلاعات خرید</option></select></label>
+              <label><span>بازار</span><select name="market" required><option value="tehran">بورس تهران</option><option value="goods">بورس کالا</option></select></label>
+              <label><span>نام دارایی پایه</span><input name="asset" type="text" list="underlyingAssetOptions" autocomplete="off" required /><datalist id="underlyingAssetOptions"></datalist></label>
+              <label id="underlyingExerciseSourceField" class="hidden"><span>معامله اختیار خرید</span><select name="source_trade_id"><option value="">انتخاب معامله باز یا بسته</option></select></label>
+              <div id="underlyingExerciseCalculation" class="trade-contract-meta hidden"></div>
+              <div class="trade-date-field"><span>تاریخ خرید شمسی</span><div class="jalali-input-wrap"><input name="entry_date" class="ltr-input" type="text" inputmode="none" placeholder="۱۴۰۵/۰۶/۰۴" readonly required /><button id="underlyingDatePickerButton" class="jalali-picker-button" type="button" aria-label="انتخاب تاریخ خرید از تقویم شمسی" aria-expanded="false">تقویم</button><div id="underlyingDatePicker" class="jalali-date-picker hidden" role="dialog" aria-label="تقویم انتخاب تاریخ خرید"></div></div></div>
+              <label><span>قیمت خرید / سربه‌سر هر واحد</span><input name="entry_price" type="number" min="0.000001" step="any" required /><small id="underlyingPriceSuggestion">با انتخاب نماد، آخرین معامله به‌صورت پیشنهادی درج می‌شود.</small></label>
+              <label><span>تعداد واقعی دارایی پایه</span><input name="quantity" type="number" min="0.000001" step="any" required /></label>
+              <label><span>کارمزد خرید</span><input name="commission" type="number" min="0" step="any" value="0" /><small>به‌صورت خودکار محاسبه می‌شود و قابل ویرایش است.</small></label>
+              <label class="trade-entry-confirmation"><input name="price_confirmed" type="checkbox" value="true" required /><span>قیمت پیشنهادی بازار را بررسی کردم و قیمت، تعداد، تاریخ و روش خرید را تأیید می‌کنم.</span></label>
+              <div class="trade-form-actions"><button class="primary-button" type="submit">ثبت دارایی پایه</button><button id="underlyingCancelEdit" class="secondary-button" type="button">انصراف</button></div>
+            </form>
+          </div>
+          <div id="underlyingCloseFormSlot" class="trade-form-slot">
+            <form id="underlyingCloseForm" class="trade-form underlying-form" novalidate>
+              <input name="position_id" type="hidden" />
+              <p id="underlyingCloseMeta" class="trade-contract-meta"></p>
+              <label><span>تاریخ فروش شمسی</span><input name="exit_date" class="ltr-input" type="text" placeholder="۱۴۰۵/۰۶/۰۴" required /></label>
+              <label><span>تعداد واقعی برای فروش</span><input name="quantity" type="number" min="0.000001" step="any" required /></label>
+              <label><span>قیمت فروش هر واحد</span><input name="exit_price" type="number" min="0.000001" step="any" required /></label>
+              <label><span>کارمزد فروش</span><input name="exit_commission" type="number" min="0" step="any" value="0" /><small>به‌صورت خودکار محاسبه می‌شود و قابل ویرایش است.</small></label>
+              <label class="trade-entry-confirmation"><input name="price_confirmed" type="checkbox" value="true" required /><span>قیمت، تعداد و تاریخ فروش دارایی پایه را بررسی کردم.</span></label>
+              <div class="trade-form-actions"><button class="primary-button" type="submit">ثبت فروش</button><button id="underlyingCloseCancel" class="secondary-button" type="button">انصراف</button></div>
+            </form>
+          </div>
+          <div id="tradeMessage" class="trade-message hidden" aria-live="polite"></div>
+          <div id="tradesList" class="trades-list"><div class="trades-empty">هنوز معامله‌ای ثبت نشده است.</div></div>
+          <section class="underlying-monitor" aria-labelledby="underlyingMonitorTitle"><header><div><small>موقعیت‌های مستقل و آزاد</small><h3 id="underlyingMonitorTitle">دارایی‌های پایه</h3><p>دارایی تخصیص‌یافته به کاوردکال تا زمان آزادشدن، اینجا در سود کل محاسبه نمی‌شود.</p></div><span id="underlyingOpenCount">۰ موقعیت</span></header><div id="underlyingSummary" class="underlying-summary"></div><div class="trade-bulk-bar underlying-bulk-bar" data-underlying-bulk-status="open"><label><input type="checkbox" data-underlying-select-all="open" /><span>انتخاب همه خریدهای باز</span></label><span data-underlying-selected-count="open">۰ انتخاب</span><button class="danger-button" type="button" data-underlying-bulk-delete="open" disabled>حذف انتخاب‌شده‌ها</button></div><div id="underlyingList" class="underlying-list"><div class="trades-empty">دارایی پایه آزادی ثبت نشده است.</div></div></section>
+          <p class="trades-note">آخرین معامله به‌صورت پیشنهادی درج می‌شود و ثبت نهایی همیشه به تأیید کاربر نیاز دارد. بهای دارایی حاصل از اعمال برابر است با قیمت اعمال تنزیل‌شده با نرخ بدون ریسک مرکب برای فاصله خرید تا اعمال، به‌علاوه پرمیوم پرداختی.</p>
+        </section>
+
+        </div>
+
+        <section id="performanceDashboard" class="closed-performance-dashboard performance-report-dashboard" data-page-view="profit-recognition" aria-live="polite" aria-busy="true">
+          <div class="closed-performance-skeleton" aria-label="در حال آماده‌سازی گزارش عملکرد">
+            <i></i><i></i><i></i><i></i><b></b><b></b>
+          </div>
+        </section>
+
+        <section id="profitRecognitionPanel" class="profit-recognition-panel" hidden aria-labelledby="profitRecognitionTitle">
+          <header class="profit-recognition-header">
+            <div><small>نمای تجمیعی پرتفوی</small><h2 id="profitRecognitionTitle">شناسایی سود تا حالا</h2><p>معاملات بسته فقط یک‌بار محاسبه می‌شوند و اثر تغییرات دارایی پایه را می‌توان روشن یا خاموش کرد.</p></div>
+            <div class="profit-recognition-header-actions"><div class="profit-mode-toggle" role="group" aria-label="مبنای شناسایی سود"><button type="button" class="active" data-profit-mode="with_underlying" aria-pressed="true">با تغییرات پایه</button><button type="button" data-profit-mode="option_only" aria-pressed="false">فقط اختیار</button></div><span id="profitRecognitionBadge" class="calculator-badge">۰ معامله</span></div>
+          </header>
+          <div id="profitRecognitionContent"><div class="trades-empty">در حال محاسبه سود کاوردکال‌ها…</div></div>
+        </section>
+
+        <div class="trade-page-layout" data-page-view="closed-trades">
+        <aside class="trade-control-sidebar closed-legacy-controls" aria-label="کنترل معاملات بسته">
+          <header><small>پنل معاملات بسته</small><strong>فیلتر و عملیات</strong></header>
+          <div class="trade-sidebar-group"><span>نوع معامله</span><div class="trade-filter-options">
+            <button type="button" class="active" data-trade-strategy-filter="closed" data-value="all">همه معاملات</button>
+            <button type="button" data-trade-strategy-filter="closed" data-value="covered_call">کاوردکال</button>
+            <button type="button" data-trade-strategy-filter="closed" data-value="long_call">خرید اختیار</button>
+          </div></div>
+          <div class="trade-sidebar-group"><span>نوع نمایش</span><div class="trade-filter-options two">
+            <button type="button" class="active" data-trade-view-mode="closed" data-value="summary">خلاصه</button>
+            <button type="button" data-trade-view-mode="closed" data-value="full">کامل</button>
+          </div></div>
+          <button type="button" class="primary-button trade-sidebar-action" data-open-trade-form>+ ثبت معامله جدید</button>
+          <button id="exportClosedTrades" class="secondary-button trade-sidebar-action" type="button">دریافت خروجی CSV</button>
+          <span id="closedTradeSidebarCount" class="calculator-badge">۰ معامله</span>
+        </aside>
+
+        <section id="closedPerformanceDashboard" class="closed-performance-dashboard" data-page-view="closed-trades" aria-live="polite" aria-busy="true">
+          <div class="closed-performance-skeleton" aria-label="در حال آماده‌سازی آمار معاملات بسته‌شده">
+            <i></i><i></i><i></i><i></i><b></b><b></b>
+          </div>
+        </section>
+
+        <section class="closed-summary-grid closed-legacy-section" data-page-view="closed-trades" aria-label="خلاصه معاملات بسته‌شده">
+          <article><span>معاملات بسته</span><strong id="closedTradesCount">۰</strong><small>ثبت خروج قطعی</small></article>
+          <article class="win"><span>معاملات سودده</span><strong id="closedWinsCount">۰</strong><small id="closedWinRate">نرخ موفقیت ۰٪</small></article>
+          <article class="loss"><span>معاملات زیان‌ده</span><strong id="closedLossesCount">۰</strong><small>بر اساس سود قطعی</small></article>
+          <article class="net"><span>خالص سود و زیان</span><strong id="closedNetProfit">۰</strong><small>مجموع معاملات ثبت‌شده</small></article>
+          <article class="net"><span>درصد سود کل</span><strong id="closedProfitPercent">۰٪</strong><small>سود قطعی ÷ مجموع سرمایه ورود</small></article>
+          <article><span>میانگین مدت معامله</span><strong id="closedAverageDays">۰ روز</strong><small>از تاریخ ورود تا خروج</small></article>
+          <article class="net"><span>درصد سود سالانه (YOY)</span><strong id="closedAnnualizedReturn">۰٪</strong><small>سالانه‌سازی موزون بر مبنای سرمایه‌روز</small></article>
+        </section>
+
+        <section id="closedCoveredEvaluation" class="closed-covered-evaluation closed-legacy-section" data-page-view="closed-trades" aria-live="polite">
+          <div class="trades-empty">برای ارزیابی تجمیعی کاوردکال، معامله بسته‌شده‌ای ثبت نشده است.</div>
+        </section>
+
+        <details class="closed-portfolio-details closed-legacy-section" data-page-view="closed-trades">
+          <summary><span><small>جمع پرتفوی معاملات بسته</small><strong>نقدینگی و سود به تفکیک دارایی پایه</strong></span><b><i>بیشتر</i><i>کمتر</i></b></summary>
+          <div id="closedPortfolioByAsset" class="asset-portfolio-breakdown"><div class="trades-empty">معامله بسته‌شده‌ای ثبت نشده است.</div></div>
+        </details>
+
+        <section class="trades-panel closed-trades-panel closed-legacy-section" data-page-view="closed-trades" aria-labelledby="closedTradesTitle">
+          <header class="trades-header">
+            <div><small>تاریخچه خروج</small><h2 id="closedTradesTitle">کارنامه معاملات بسته‌شده</h2><p>بازده سالانه‌شده با توجه به سرمایه ورود و تعداد روز واقعی نگهداری محاسبه می‌شود.</p></div>
+            <div class="closed-trades-actions"><span id="closedTradesBadge" class="calculator-badge">۰ معامله</span></div>
+          </header>
+          <div class="trade-bulk-bar" data-bulk-status="closed">
+            <label><input type="checkbox" data-trade-select-all="closed" /><span>انتخاب همه معاملات بسته</span></label>
+            <span data-trade-selected-count="closed">۰ انتخاب</span>
+            <button class="danger-button" type="button" data-trade-bulk-delete="closed" disabled>حذف انتخاب‌شده‌ها</button>
+          </div>
+          <div id="closedTradesList" class="trades-list"><div class="trades-empty">هنوز معامله بسته‌شده‌ای ثبت نشده است.</div></div>
+        </section>
+        <section class="underlying-monitor" data-page-view="closed-trades" aria-labelledby="closedUnderlyingTitle"><header><div><small>تاریخچه فروش دارایی پایه</small><h3 id="closedUnderlyingTitle">دارایی‌های پایه بسته‌شده</h3></div><span id="underlyingClosedCount">۰ موقعیت</span></header><div id="closedUnderlyingSummary" class="underlying-summary"></div><div class="trade-bulk-bar underlying-bulk-bar" data-underlying-bulk-status="closed"><label><input type="checkbox" data-underlying-select-all="closed" /><span>انتخاب همه دارایی‌های بسته</span></label><span data-underlying-selected-count="closed">۰ انتخاب</span><button class="danger-button" type="button" data-underlying-bulk-delete="closed" disabled>حذف انتخاب‌شده‌ها</button></div><div id="closedUnderlyingList" class="underlying-list"><div class="trades-empty">فروش دارایی پایه‌ای ثبت نشده است.</div></div></section>
+
+        </div>
+
+        <section class="calculator-panel" data-page-view="calculator" aria-labelledby="calculatorTitle">
+          <header class="calculator-header">
+            <div><small>ابزار محاسباتی</small><h2 id="calculatorTitle">ماشین‌حساب امتیاز کاوردکال</h2><p>مشخصات قرارداد دلخواه را وارد کنید تا بازده، دلتا، حاشیه امن و امتیاز جامع محاسبه شود.</p></div>
+            <span class="calculator-badge">۰ تا ۱۰۰</span>
+          </header>
+          <form id="coveredCalculatorForm" class="calculator-form" novalidate>
+            <label><span>بازار</span><select name="market"><option value="tehran">بورس تهران</option><option value="goods">بورس کالا</option></select></label>
+            <label><span>نام دارایی پایه</span><input name="asset" type="text" placeholder="مثلاً وبملت" required /></label>
+            <label><span>نماد اختیار خرید</span><input name="symbol" type="text" placeholder="مثلاً ضملت…" required /></label>
+            <label><span>قیمت دارایی پایه</span><input name="base_price" type="number" min="0" step="any" placeholder="۱۱۰۰" required /></label>
+            <label><span>پرمیوم دریافتی</span><input name="premium" type="number" min="0" step="any" placeholder="۱۰۰" required /></label>
+            <label><span>قیمت اعمال</span><input name="strike" type="number" min="0" step="any" placeholder="۱۰۰۰" required /></label>
+            <label><span>روز تا سررسید</span><input name="days" type="number" min="1" step="1" placeholder="۳۰" required /></label>
+            <label><span>ارزش معاملات <small>اختیاری</small></span><input name="transaction_value" type="number" min="0" step="any" placeholder="خالی = میانه بازار" /></label>
+            <label><span>آخرین معامله اختیار <small>اختیاری</small></span><input name="option_last" type="number" min="0" step="any" placeholder="برای سنجش شکاف قیمت" /></label>
+            <div class="calculator-actions"><button class="primary-button" type="submit">محاسبه و امتیازدهی</button><button id="calculatorReset" class="secondary-button" type="reset">پاک‌کردن</button></div>
+          </form>
+          <div id="calculatorResult" class="calculator-result hidden" aria-live="polite"></div>
+        </section>
+
+        <section class="calculator-panel long-calculator-panel" data-page-view="calculator" aria-labelledby="longCalculatorTitle">
+          <header class="calculator-header">
+            <div><small>محاسبه دستی خرید اختیار</small><h2 id="longCalculatorTitle">ماشین‌حساب خرید اختیار خرید</h2><p>هزینه تعدیل‌شده، مزیت نسبی، ITM، نقطه سربه‌سر و اهرم قرارداد را محاسبه کنید.</p></div>
+            <span class="calculator-badge">ورودی دستی</span>
+          </header>
+          <form id="longCalculatorForm" class="calculator-form" novalidate>
+            <label><span>نام دارایی پایه</span><input name="asset" type="text" placeholder="مثلاً وبملت" required /></label>
+            <label><span>نماد اختیار خرید</span><input name="symbol" type="text" placeholder="مثلاً ضملت…" required /></label>
+            <label><span>قیمت دارایی پایه</span><input name="base_price" type="number" min="0.000001" step="any" required /></label>
+            <label><span>پرمیوم پرداختی</span><input name="premium" type="number" min="0.000001" step="any" required /></label>
+            <label><span>قیمت اعمال</span><input name="strike" type="number" min="0.000001" step="any" required /></label>
+            <label><span>روز تا سررسید</span><input name="days" type="number" min="0" step="1" required /></label>
+            <label><span>نرخ سود بدون ریسک سالانه</span><input name="interest_rate" type="number" min="0" max="200" step="0.1" value="40" required /></label>
+            <div class="calculator-actions"><button class="primary-button" type="submit">محاسبه خرید اختیار</button><button id="longCalculatorReset" class="secondary-button" type="reset">پاک‌کردن</button></div>
+          </form>
+          <div id="longCalculatorResult" class="calculator-result hidden" aria-live="polite"></div>
+        </section>
+
+        <section class="order-flow-panel" data-page-view="order-flow" aria-labelledby="orderFlowTitle">
+          <header class="order-flow-header">
+            <div><small>دفتر سفارش زنده</small><h2 id="orderFlowTitle">Order Flow بازار اختیار</h2><p>بورس تهران و بورس کالا · ردیف‌های تجمیعی خرید و فروش</p></div>
+            <button id="orderFlowRefreshButton" class="primary-button" type="button">به‌روزرسانی</button>
+          </header>
+          <div class="order-flow-controls" aria-label="انتخاب نماد">
+            <div class="order-flow-toggle" role="group" aria-label="بازار">
+              <button type="button" class="active" data-order-market="tehran">بورس تهران</button>
+              <button type="button" data-order-market="goods">بورس کالا</button>
+            </div>
+            <div class="order-flow-toggle" role="group" aria-label="نوع نماد">
+              <button type="button" class="active" data-order-type="option">اختیار خرید</button>
+              <button type="button" data-order-type="base">دارایی پایه</button>
+            </div>
+            <label class="order-flow-symbol"><span>نماد</span><select id="orderFlowSymbol"></select></label>
+            <label class="order-flow-refresh-rate"><span>تازه‌سازی خودکار</span><select id="orderFlowRefreshRate"><option value="15">۱۵ ثانیه</option><option value="30" selected>۳۰ ثانیه</option><option value="60">۶۰ ثانیه</option></select></label>
+          </div>
+          <div id="orderFlowStatus" class="forecast-status loading" aria-live="polite"><span class="spinner"></span><span>در حال دریافت دفتر سفارش…</span></div>
+          <div id="orderFlowResults" class="order-flow-results"></div>
+        </section>
+
+        <section class="forecast-panel" data-page-view="forecast" aria-labelledby="forecastTitle">
+          <header class="forecast-header">
+            <div>
+              <small>به‌روزرسانی مستقل از رادار اختیار</small>
+              <h2 id="forecastTitle">خروجی مدل‌های پیش‌بینی</h2>
+              <p>سیگنال جاری، عملکرد تاریخی، افت سرمایه و مقایسه با خرید و نگهداری در یک نما.</p>
+            </div>
+            <button id="forecastRefreshButton" class="primary-button" type="button">به‌روزرسانی پیش‌بینی</button>
+          </header>
+          <div id="forecastStatus" class="forecast-status loading" aria-live="polite"><span class="spinner"></span><span>برای مشاهده نتایج، داده‌های مدل دریافت می‌شوند…</span></div>
+          <div id="forecastResults" class="forecast-results"></div>
+        </section>
+
+        <section class="commodity-fx-panel" data-page-view="commodity-exchange" aria-labelledby="commodityFxTitle">
+          <header class="commodity-fx-header">
+            <div>
+              <small>قیمت زنده گواهی‌ها و آخرین قیمت جهانی</small>
+              <h2 id="commodityFxTitle">مقایسه دلار ضمنی با دلار بازار آزاد</h2>
+              <p>مقادیر مثبت یعنی دلار ضمنی گواهی گران‌تر از دلار آزاد و مقادیر منفی یعنی ارزان‌تر است.</p>
+            </div>
+            <button id="commodityFxRefreshButton" class="primary-button" type="button">به‌روزرسانی محاسبات</button>
+          </header>
+          <div id="commodityFxStatus" class="forecast-status loading" aria-live="polite"><span class="spinner"></span><span>در حال دریافت قیمت‌های بورس کالا و بازار جهانی…</span></div>
+          <div id="commodityFxResults" class="commodity-fx-results"></div>
+        </section>
+
+        <section class="settings-panel" data-page-view="settings" aria-labelledby="settingsTitle">
+          <header class="settings-header">
+              <div><small>تنظیمات و داده‌های حساب</small><h2 id="settingsTitle">مدیریت حساب nicoption</h2><p>معاملات قدیمی را وارد کنید یا ظاهر این دستگاه را شخصی‌سازی کنید. دسترسی صفحات توسط مدیر سایت تعیین می‌شود.</p></div>
+            <span class="settings-saved-badge">ذخیره خودکار</span>
+          </header>
+          <div class="settings-grid">
+            <article class="setting-card trade-import-card">
+              <div class="setting-card-icon">CSV</div>
+              <div class="setting-card-copy"><h3>ورود معاملات باز</h3><p>فایل خروجی معاملات باز nicoption را انتخاب کنید. ابتدا فایل بررسی می‌شود و تا تأیید شما چیزی ثبت نخواهد شد.</p></div>
+              <form class="trade-import-form" data-import-status="open" novalidate>
+                <label class="csv-file-picker"><span>انتخاب فایل معاملات باز</span><small>فقط CSV با UTF-8 · حداکثر ۲ مگابایت</small><input type="file" name="file" accept=".csv,text/csv" /></label>
+                <div class="trade-import-file" aria-live="polite">هنوز فایلی انتخاب نشده است.</div>
+                <div class="trade-import-actions"><button class="secondary-button" type="submit">بررسی فایل</button><button class="primary-button trade-import-confirm hidden" type="button">تأیید و ثبت</button></div>
+                <div class="trade-import-result" role="status" aria-live="polite"></div>
+              </form>
+            </article>
+
+            <article class="setting-card trade-import-card">
+              <div class="setting-card-icon">CSV</div>
+              <div class="setting-card-copy"><h3>ورود معاملات بسته‌شده</h3><p>فایل خروجی معاملات بسته nicoption را انتخاب کنید. سود و اطلاعات خروج از روی همان فایل بازسازی می‌شوند.</p></div>
+              <form class="trade-import-form" data-import-status="closed" novalidate>
+                <label class="csv-file-picker"><span>انتخاب فایل معاملات بسته</span><small>فقط CSV با UTF-8 · حداکثر ۲ مگابایت</small><input type="file" name="file" accept=".csv,text/csv" /></label>
+                <div class="trade-import-file" aria-live="polite">هنوز فایلی انتخاب نشده است.</div>
+                <div class="trade-import-actions"><button class="secondary-button" type="submit">بررسی فایل</button><button class="primary-button trade-import-confirm hidden" type="button">تأیید و ثبت</button></div>
+                <div class="trade-import-result" role="status" aria-live="polite"></div>
+              </form>
+            </article>
+
+            <article class="setting-card">
+              <div class="setting-card-icon">Aa</div>
+              <div class="setting-card-copy"><h3>اندازه متن</h3><p>اندازه تمام نوشته‌ها، اعداد، کارت‌ها و جدول‌ها را تغییر می‌دهد.</p></div>
+              <div class="setting-control">
+                <div class="range-labels"><span>کوچک</span><strong id="textScaleValue">۱۰۰٪</strong><span>بزرگ</span></div>
+                <input id="textScaleSetting" type="range" min="80" max="130" step="5" value="100" aria-label="اندازه متن" />
+              </div>
+              <div class="text-size-preview"><small>نمونه متن</small><strong>بازده سالانه ۷۵٫۴۰٪</strong></div>
+            </article>
+
+            <article class="setting-card">
+              <div class="setting-card-icon">↻</div>
+              <div class="setting-card-copy"><h3>فاصله تازه‌سازی</h3><p>داده‌های TSETMC و بورس کالا در این فاصله به‌صورت خودکار دوباره دریافت می‌شوند.</p></div>
+              <div class="setting-control">
+                <div class="range-labels"><span>۱ دقیقه</span><strong id="refreshIntervalValue">۱۰ دقیقه</strong><span>۱۰ دقیقه</span></div>
+                <input id="refreshIntervalSetting" type="range" min="1" max="10" step="1" value="10" aria-label="فاصله تازه‌سازی خودکار" />
+              </div>
+              <div class="refresh-setting-summary"><span class="live-dot"></span><span>تازه‌سازی خودکار فعال است</span></div>
+            </article>
+
+            <article class="setting-card password-change-card">
+              <div class="setting-card-icon" aria-hidden="true">•••</div>
+              <div class="setting-card-copy"><h3>تغییر رمز عبور</h3><p>برای امنیت حساب، ابتدا رمز فعلی و سپس رمز جدید را وارد کنید. پس از تغییر رمز همچنان وارد حساب می‌مانید.</p></div>
+              <form id="passwordChangeForm" class="password-change-form" novalidate>
+                <div id="passwordChangeMessage" class="password-change-message" role="status" aria-live="polite"></div>
+                <label class="password-setting-field" for="currentPassword">
+                  <span>رمز عبور فعلی</span>
+                  <span class="password-input-wrap"><input id="currentPassword" name="old_password" type="password" autocomplete="current-password" aria-describedby="currentPasswordError" /><button type="button" data-password-toggle="currentPassword" aria-label="نمایش رمز عبور فعلی" aria-pressed="false">نمایش</button></span>
+                  <small id="currentPasswordError" class="password-field-error"></small>
+                </label>
+                <label class="password-setting-field" for="newPassword">
+                  <span>رمز عبور جدید</span>
+                  <span class="password-input-wrap"><input id="newPassword" name="new_password1" type="password" autocomplete="new-password" aria-describedby="newPasswordHint newPasswordError" /><button type="button" data-password-toggle="newPassword" aria-label="نمایش رمز عبور جدید" aria-pressed="false">نمایش</button></span>
+                  <small id="newPasswordHint" class="password-field-hint">حداقل ۸ نویسه؛ نه کاملاً عددی و نه شبیه اطلاعات حساب.</small>
+                  <small id="newPasswordError" class="password-field-error"></small>
+                </label>
+                <label class="password-setting-field" for="confirmPassword">
+                  <span>تکرار رمز عبور جدید</span>
+                  <span class="password-input-wrap"><input id="confirmPassword" name="new_password2" type="password" autocomplete="new-password" aria-describedby="confirmPasswordError" /><button type="button" data-password-toggle="confirmPassword" aria-label="نمایش تکرار رمز عبور جدید" aria-pressed="false">نمایش</button></span>
+                  <small id="confirmPasswordError" class="password-field-error"></small>
+                </label>
+                <button class="primary-button password-change-submit" type="submit">تغییر رمز عبور</button>
+              </form>
+            </article>
+          </div>
+          <footer class="settings-footer"><div id="settingsMessage" aria-live="polite">تنظیمات فعلی روی این دستگاه ذخیره شده است.</div><button id="resetUserSettings" class="secondary-button" type="button">بازگشت به تنظیمات پیش‌فرض</button></footer>
+        </section>
+
+      </main>
+
+      <div id="analysisModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="analysisTitle" tabindex="-1">
+        <article class="analysis-modal">
+          <header><div><small id="analysisEyebrow">تحلیل موقعیت</small><h2 id="analysisTitle">—</h2></div><button id="analysisClose" class="modal-close" type="button" aria-label="بستن پنجره تحلیل">×</button></header>
+          <div id="analysisContent"></div>
+        </article>
+      </div>
+
+      <div id="tradeEditModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="tradeEditTitle" tabindex="-1">
+        <article class="trade-edit-modal">
+          <header><div><small id="tradeEditEyebrow">ثبت و ویرایش معامله</small><h2 id="tradeEditTitle">ثبت معامله جدید</h2></div><button id="tradeEditDismiss" class="modal-close" type="button" aria-label="بستن">×</button></header>
+          <div id="tradeEditModalMessage" class="trade-message hidden" role="alert" tabindex="-1"></div>
+          <div id="tradeEditModalBody"></div>
+        </article>
+      </div>
+
+      <div id="tradeCloseModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="tradeCloseTitle" tabindex="-1">
+        <article class="trade-close-modal">
+          <header>
+            <div><small>ثبت نتیجه نهایی معامله</small><h2 id="tradeCloseTitle">ثبت خروج</h2></div>
+            <button id="tradeCloseDismiss" class="modal-close" type="button" aria-label="بستن">×</button>
+          </header>
+          <form id="tradeCloseForm" class="trade-close-form" novalidate>
+            <input name="trade_id" type="hidden" />
+            <p id="tradeCloseMeta" class="trade-close-meta"></p>
+            <label><span>تاریخ خروج شمسی</span><input name="exit_date" class="ltr-input" type="text" inputmode="numeric" placeholder="۱۴۰۵/۰۵/۱۷" required /></label>
+            <label><span>روش خروج</span><select name="exit_method" id="tradeExitMethod" required><option value="offset">آفست کردن اختیار</option><option value="exercise">تخصیص در سررسید و فروش دارایی با قیمت اعمال</option><option value="mixed">خروج ترکیبی بر اساس تخصیص ثبت‌شده</option></select></label>
+            <label id="tradeCloseQuantityField"><span id="tradeCloseQuantityLabel">تعداد قرارداد برای بستن</span><input name="close_quantity" type="number" min="1" step="1" required /></label>
+            <label id="tradeCloseExerciseQuantityField" class="hidden"><span id="tradeCloseExerciseQuantityLabel">تعداد قرارداد برای اعمال در این خروج</span><input name="close_exercise_quantity" type="number" min="0" step="1" /><small>می‌تواند با هدف اولیه معامله متفاوت باشد.</small></label>
+            <label id="tradeClosePremiumQuantityField" class="hidden"><span id="tradeClosePremiumQuantityLabel">تعداد قرارداد برای فروش (آفست) در این خروج</span><input name="close_premium_trade_quantity" type="number" min="0" step="1" /><small>جمع اعمال و آفست نباید از مانده قراردادها بیشتر شود.</small></label>
+            <label id="tradeUnderlyingDispositionField"><span>وضعیت دارایی پایه پس از آفست</span><select name="underlying_disposition"><option value="sell">فروش دارایی پایه</option><option value="keep">نگهداری دارایی پایه در بخش دارایی‌ها</option></select></label>
+            <label id="tradeUnderlyingKeepBasisField" class="hidden"><span>قیمت ورود دارایی در بخش دارایی‌ها</span><select name="underlying_keep_basis"><option value="entry">قیمت پایه هنگام ثبت کاوردکال</option><option value="exit">قیمت پایه روز آفست</option></select><small>این قیمت، بهای تمام‌شده دارایی آزادشده در بخش دارایی‌ها می‌شود.</small></label>
+            <label id="tradeExitBasePriceField"><span id="tradeExitBasePriceLabel">قیمت فروش دارایی پایه</span><input name="exit_base_price" type="number" min="0.000001" step="any" required /><small id="tradeExitBasePriceNote" class="hidden"></small></label>
+            <label id="tradeExitOptionPriceField"><span id="tradeExitOptionPriceLabel">قیمت اختیار در خروج</span><input name="exit_option_price" type="number" min="0" step="any" required /></label>
+            <label id="tradeCloseOptionCommissionField"><span id="tradeCloseOptionCommissionLabel">کارمزد معامله اختیار</span><input id="tradeCloseOptionCommission" type="number" min="0" step="any" value="0" /><small>خودکار محاسبه می‌شود و قابل ویرایش است.</small></label>
+            <label id="tradeCloseUnderlyingCommissionField" class="hidden"><span id="tradeCloseUnderlyingCommissionLabel">کارمزد معامله دارایی پایه</span><input id="tradeCloseUnderlyingCommission" type="number" min="0" step="any" value="0" /><small>خودکار محاسبه می‌شود و قابل ویرایش است.</small></label>
+            <label><span>مجموع کارمزدهای خروج</span><input name="exit_commission" type="number" min="0" step="any" value="0" readonly /><small>جمع کارمزدهای مسیر خروج انتخاب‌شده است.</small></label>
+            <label class="trade-close-note"><span>توضیحات خروج <small>اختیاری</small></span><textarea class="resize-none" name="exit_note" maxlength="500" placeholder="مثلاً خروج دستی، آفست یا تسویه در سررسید"></textarea></label>
+            <label class="trade-price-confirmation">
+              <input name="price_confirmed" type="checkbox" value="true" required />
+              <span>قیمت آخرین معامله اختیار و دارایی پایه را بررسی و تأیید کردم.</span>
+            </label>
+            <div class="trade-close-actions">
+              <button class="primary-button" type="submit">ثبت و بستن معامله</button>
+              <button id="tradeCloseMarket" class="secondary-button" type="button">قرار دادن آخرین معاملات بازار</button>
+              <button id="tradeCloseCancel" class="secondary-button" type="button">انصراف</button>
+            </div>
+          </form>
+        </article>
+      </div>
+
+      <div id="confirmationModal" class="modal-backdrop hidden" role="alertdialog" aria-modal="true" aria-labelledby="confirmationTitle" aria-describedby="confirmationDescription" tabindex="-1">
+        <article class="confirmation-modal">
+          <div class="confirmation-mark" aria-hidden="true">!</div>
+          <div>
+            <small>تأیید عملیات</small>
+            <h2 id="confirmationTitle">حذف رکورد</h2>
+            <p id="confirmationDescription">این عملیات قابل بازگشت نیست.</p>
+          </div>
+          <div class="confirmation-actions">
+            <button id="confirmationCancel" class="secondary-button" type="button">انصراف</button>
+            <button id="confirmationAccept" class="danger-button" type="button">حذف</button>
+          </div>
+        </article>
+      </div>
+
+      <div id="economicDetailDialog" class="economic-dialog-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="economicDetailTitle" tabindex="-1">
+        <article class="economic-dialog">
+          <header><div><small>جزئیات شاخص</small><h2 id="economicDetailTitle">—</h2></div><button id="economicDetailClose" class="modal-close" type="button" aria-label="بستن جزئیات شاخص">×</button></header>
+          <div id="economicDetailBody" class="economic-dialog-body"></div>
+        </article>
+      </div>
+
+      <div id="tradeDetailWorkspace" class="trade-detail-workspace" aria-live="polite"></div>
+      <div id="assetTradesModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="assetTradesTitle" aria-describedby="assetTradesDescription" tabindex="-1">
+        <article class="asset-trades-modal">
+          <header><div><small>تاریخچه کامل نماد</small><h2 id="assetTradesTitle">—</h2><p id="assetTradesDescription">همه معاملات دارایی پایه، کاوردکال و خرید اختیار خرید</p></div><button id="assetTradesDismiss" class="modal-close" type="button" data-close-asset-trades aria-label="بستن معاملات نماد">×</button></header>
+          <div id="assetTradesModalBody" class="asset-trades-modal-body"></div>
+        </article>
+      </div>
+
+      <footer>
+        <span>منبع: <a href="https://www.tsetmc.com/OptionMarketWatch/0" target="_blank" rel="noreferrer">TSETMC</a> · <a href="https://cdn.ime.co.ir/" target="_blank" rel="noreferrer">بورس کالای ایران</a></span>
+        <span>این داشبورد صرفاً ابزار غربالگری است و پیشنهاد معامله نیست.</span>
+      </footer>
+    </div>
+    <script src="/financial-csv.js?v=20261018-cross-layer-1" defer></script>
+    <script src="/static/open-trades-v2.js?v=20261104-remove-header-1" defer></script>
+    <script src="/economic-indicators.js?v=20261104-amar-comparison-1" defer></script>
+    <script src="/statistical-center.js?v=20261107-amar-mcp-changes-8" defer></script>
+    <script src="/monetary-indicators.js?v=20261107-cbi-mcp-exchange-removed-open-market-1" defer></script>
+    <script src="/app.js?v=20261104-performance-chart-proportions-1" defer></script>
+  </body>
+</html>

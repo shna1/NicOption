@@ -1,0 +1,15 @@
+{
+  "profile": "product-admin",
+  "sourceRoots": ["bambo_bot/web_static"],
+  "locale": "fa-IR",
+  "canonicalMap": "UX-CONTRACT.md",
+  "requiredCapabilities": ["Table Selection", "Select/Listbox", "Form", "Scrollbar", "CRUD"],
+  "ownership": {
+    "Table Selection": "trade bulk-selection controls",
+    "Select/Listbox": "native"
+  },
+  "evidence": {
+    "crudFullFlow": "nicoption_dashboard/tests/test_stores.py",
+    "failurePaths": "nicoption_dashboard/tests/test_auth_api.py"
+  }
+}

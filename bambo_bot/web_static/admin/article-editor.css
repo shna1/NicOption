@@ -1,0 +1,51 @@
+.article-editor { max-width: 960px; direction: rtl; }
+.article-editor-shell { overflow: hidden; border: 1px solid var(--border-color, #c9c9c9); border-radius: 10px; background: var(--body-bg, #fff); }
+.article-editor-toolbar { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px; border-bottom: 1px solid var(--border-color, #ddd); background: var(--darkened-bg, #f5f5f5); }
+.article-editor-toolbar button,
+.article-image-upload,
+.article-link-actions button { min-height: 36px; padding: 6px 10px; border: 1px solid var(--border-color, #bbb); border-radius: 7px; color: var(--body-fg, #222); background: var(--body-bg, #fff); cursor: pointer; font: inherit; }
+.article-editor-toolbar button:hover,
+.article-editor-toolbar button:focus-visible,
+.article-link-actions button:hover,
+.article-link-actions button:focus-visible { border-color: var(--link-fg, #417690); color: var(--link-fg, #417690); }
+.article-editor-toolbar button:focus-visible,
+.article-image-upload:focus-visible,
+.article-link-actions button:focus-visible,
+.article-editor-canvas:focus-visible { outline: 3px solid color-mix(in srgb, var(--link-fg, #417690) 35%, transparent); outline-offset: 2px; }
+.article-editor-canvas { min-height: 420px; padding: 24px; color: var(--body-fg, #222); background: var(--body-bg, #fff); font-size: 16px; line-height: 2; }
+.article-editor-canvas:empty::before { content: "متن مقاله را اینجا بنویسید…"; color: var(--body-quiet-color, #777); pointer-events: none; }
+.article-editor-canvas h2 { margin: 1.5em 0 .65em; font-size: 1.55em; }
+.article-editor-canvas h3 { margin: 1.35em 0 .55em; font-size: 1.25em; }
+.article-editor-canvas blockquote { margin: 1.25em 0; padding: 12px 18px; border-inline-start: 4px solid var(--link-fg, #417690); background: var(--darkened-bg, #f5f5f5); }
+.article-editor-canvas figure { margin: 24px auto; text-align: center; }
+.article-editor-canvas img { display: block; max-width: 100%; height: auto; margin-inline: auto; border-radius: 8px; }
+.article-editor-canvas figcaption { margin-top: 8px; color: var(--body-quiet-color, #666); font-size: 13px; }
+.article-editor-source { width: 100%; min-height: 300px; }
+.article-editor-ready > .article-editor-source { display: none; }
+.article-image-panel { display: grid; grid-template-columns: minmax(220px, 1fr) minmax(220px, 1fr) auto; align-items: end; gap: 12px; padding: 14px; border-bottom: 1px solid var(--border-color, #ddd); background: color-mix(in srgb, var(--selected-bg, #e4f2f8) 48%, var(--body-bg, #fff)); }
+.article-image-panel[hidden] { display: none; }
+.article-image-field { display: grid; gap: 6px; }
+.article-image-field label { font-weight: 700; }
+.article-image-field label span { display: block; margin-top: 2px; color: var(--body-quiet-color, #666); font-size: 12px; font-weight: 400; }
+.article-image-field input { min-height: 40px; box-sizing: border-box; }
+.article-image-upload { min-height: 42px; color: #fff; border-color: var(--button-bg, #417690); background: var(--button-bg, #417690); }
+.article-image-upload[disabled] { cursor: wait; opacity: .65; }
+.article-editor-status { grid-column: 1 / -1; min-height: 1.5em; margin: 0; color: var(--body-quiet-color, #666); }
+.article-editor-status.is-error { color: var(--error-fg, #ba2121); }
+.article-link-dialog { width: min(440px, calc(100vw - 32px)); padding: 0; border: 0; border-radius: 12px; color: var(--body-fg, #222); background: var(--body-bg, #fff); box-shadow: 0 18px 60px rgba(0,0,0,.25); }
+.article-link-dialog::backdrop { background: rgba(0,0,0,.48); }
+.article-link-dialog form { display: grid; gap: 14px; padding: 22px; }
+.article-link-dialog h2 { margin: 0; font-size: 18px; }
+.article-link-dialog label { display: grid; gap: 6px; font-weight: 700; }
+.article-link-dialog input { min-height: 42px; box-sizing: border-box; }
+.article-link-actions { display: flex; justify-content: flex-start; gap: 8px; }
+.article-link-actions .article-link-confirm { color: #fff; border-color: var(--button-bg, #417690); background: var(--button-bg, #417690); }
+@media (max-width: 767px) {
+  .article-editor-toolbar { flex-wrap: nowrap; overflow-x: auto; }
+  .article-editor-toolbar button { flex: 0 0 auto; min-height: 44px; }
+  .article-image-panel { grid-template-columns: 1fr; }
+  .article-editor-canvas { min-height: 340px; padding: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .article-editor * { scroll-behavior: auto; transition: none; }
+}

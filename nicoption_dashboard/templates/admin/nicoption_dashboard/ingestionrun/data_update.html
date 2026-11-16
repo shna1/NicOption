@@ -1,0 +1,189 @@
+{% extends "admin/base_site.html" %}
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" href="/static/admin/economic-data-update.css">
+{% endblock %}
+
+{% block extrahead %}
+  {{ block.super }}
+  <script src="/static/admin/economic-data-update.js" defer></script>
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+  <a href="{% url 'admin:index' %}">خانه</a>
+  &rsaquo; <a href="{% url 'admin:nicoption_dashboard_ingestionrun_changelist' %}">اجرای ورود داده</a>
+  &rsaquo; بروزرسانی داده‌ها
+</div>
+{% endblock %}
+
+{% block content_title %}{% endblock %}
+
+{% block content %}
+<main class="economic-update" id="economic-update-main">
+  <header class="economic-update__header">
+    <div>
+      <p class="economic-update__eyebrow">ورود کنترل‌شده · تاریخچه‌دار</p>
+      <h1>بروزرسانی داده‌های اقتصادی</h1>
+      <p class="economic-update__intro">
+        داده ابتدا اعتبارسنجی و پیش‌نمایش می‌شود. ثبت نهایی، نسخه قبلی را حذف نمی‌کند و در صورت تغییر یک بازبینی جدید می‌سازد.
+      </p>
+    </div>
+    <a class="economic-update__back" href="{% url 'admin:nicoption_dashboard_ingestionrun_changelist' %}">مشاهده سابقه اجراها</a>
+  </header>
+
+  {% if committed_run %}
+    <section class="economic-receipt" aria-labelledby="commit-receipt-title">
+      <div>
+        <p class="economic-update__eyebrow">رسید ثبت</p>
+        <h2 id="commit-receipt-title">اجرای شماره {{ committed_run.pk }} ثبت شد</h2>
+      </div>
+      <dl class="economic-receipt__stats">
+        <div><dt>جدید</dt><dd>{{ committed_run.rows_inserted }}</dd></div>
+        <div><dt>اصلاح</dt><dd>{{ committed_run.rows_revised }}</dd></div>
+        <div><dt>بدون تغییر</dt><dd>{{ committed_run.rows_unchanged }}</dd></div>
+        <div><dt>ردشده</dt><dd>{{ committed_run.rows_rejected }}</dd></div>
+      </dl>
+      <a href="{% url 'admin:nicoption_dashboard_ingestionrun_change' committed_run.pk %}">جزئیات کامل اجرا</a>
+    </section>
+  {% endif %}
+
+  {% if preview %}
+    <section class="economic-preview" aria-labelledby="preview-title">
+      <div class="economic-preview__heading">
+        <div>
+          <p class="economic-update__eyebrow">مرحله ۲ از ۲</p>
+          <h2 id="preview-title">نتیجه بررسی پیش از ثبت</h2>
+          {% if preview.filename %}<p class="economic-preview__file" dir="ltr">{{ preview.filename }}</p>{% endif %}
+        </div>
+        {% if preview.strict %}<span class="economic-badge">ثبت یکپارچه</span>{% else %}<span class="economic-badge economic-badge--warning">ثبت ردیف‌های سالم</span>{% endif %}
+      </div>
+
+      <dl class="economic-preview__stats" aria-label="خلاصه نتیجه بررسی">
+        <div><dt>دیده‌شده</dt><dd>{{ preview.summary.seen }}</dd></div>
+        <div><dt>جدید</dt><dd>{{ preview.summary.inserted }}</dd></div>
+        <div><dt>اصلاح</dt><dd>{{ preview.summary.revised }}</dd></div>
+        <div><dt>بدون تغییر</dt><dd>{{ preview.summary.unchanged }}</dd></div>
+        <div class="{% if preview.summary.rejected %}is-danger{% endif %}"><dt>ردشده</dt><dd>{{ preview.summary.rejected }}</dd></div>
+      </dl>
+
+      {% if preview.issues %}
+        <div class="economic-issues" role="region" aria-labelledby="issues-title" tabindex="0">
+          <h3 id="issues-title">هشدارها و خطاها</h3>
+          <table>
+            <thead><tr><th scope="col">ردیف</th><th scope="col">وضعیت</th><th scope="col">شاخص</th><th scope="col">شرح</th></tr></thead>
+            <tbody>
+              {% for issue in preview.issues %}
+                <tr>
+                  <td class="numeric">{{ issue.row_number|default:"—" }}</td>
+                  <td><span class="economic-status economic-status--{{ issue.severity }}">{% if issue.severity == 'warning' %}هشدار{% else %}خطا{% endif %}</span></td>
+                  <td class="numeric" dir="ltr">{{ issue.indicator_code|default:"—" }}</td>
+                  <td>{{ issue.message }} <code>{{ issue.code }}</code></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p class="economic-preview__clean" role="status">داده بدون خطای مسدودکننده آماده ثبت است.</p>
+      {% endif %}
+
+      <div class="economic-preview__actions">
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="commit_preview">
+          <input type="hidden" name="preview_token" value="{{ preview.token }}">
+          <button type="submit" class="economic-button economic-button--primary"{% if not preview.can_commit %} disabled aria-describedby="commit-blocked-reason"{% endif %}>تأیید و ثبت نهایی</button>
+        </form>
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="cancel_preview">
+          <button type="submit" class="economic-button economic-button--secondary">لغو پیش‌نمایش</button>
+        </form>
+      </div>
+      {% if not preview.can_commit %}
+        <p id="commit-blocked-reason" class="economic-preview__blocked">در حالت ثبت یکپارچه، ابتدا خطاها را اصلاح و دوباره بررسی کنید.</p>
+      {% endif %}
+    </section>
+  {% endif %}
+
+  <div class="economic-update__grid{% if preview %} economic-update__grid--muted{% endif %}">
+    <section class="economic-panel" aria-labelledby="manual-title">
+      <div class="economic-panel__heading">
+        <span class="economic-panel__number" aria-hidden="true">۱</span>
+        <div><h2 id="manual-title">ورود یک مقدار</h2><p>برای انتشارهای موردی یا اصلاح یک دوره</p></div>
+      </div>
+      <form method="post" novalidate class="economic-form">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="preview_manual">
+        {% if manual_form.non_field_errors %}
+          <div class="economic-form__summary" role="alert" tabindex="-1">{{ manual_form.non_field_errors }}</div>
+        {% endif %}
+        <div class="economic-form__fields">
+          {% for field in manual_form %}
+            <div class="economic-field{% if field.errors %} economic-field--invalid{% endif %}{% if field.name == 'notes' or field.name == 'source_url' %} economic-field--wide{% endif %}">
+              <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span aria-hidden="true"> *</span>{% endif %}</label>
+              {{ field }}
+              {% if field.help_text %}<p class="economic-field__help" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</p>{% endif %}
+              {% if field.errors %}<div class="economic-field__error" id="{{ field.auto_id }}_error" role="alert">{{ field.errors }}</div>{% endif %}
+            </div>
+          {% endfor %}
+        </div>
+        <p class="economic-form__note">واحد از کاتالوگ شاخص خوانده می‌شود و قابل تغییر دستی نیست.</p>
+        <button type="submit" class="economic-button economic-button--primary">بررسی مقدار</button>
+      </form>
+    </section>
+
+    <section class="economic-panel" aria-labelledby="csv-title">
+      <div class="economic-panel__heading">
+        <span class="economic-panel__number" aria-hidden="true">۲</span>
+        <div><h2 id="csv-title">ورود گروهی CSV</h2><p>برای بروزرسانی چند شاخص یا چند دوره</p></div>
+      </div>
+      <form method="post" enctype="multipart/form-data" novalidate class="economic-form economic-form--upload">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="preview_csv">
+        {% for field in csv_form %}
+          <div class="economic-field{% if field.errors %} economic-field--invalid{% endif %}">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}<p class="economic-field__help">{{ field.help_text }}</p>{% endif %}
+            {% if field.errors %}<div class="economic-field__error" role="alert">{{ field.errors }}</div>{% endif %}
+          </div>
+        {% endfor %}
+        <details class="economic-contract">
+          <summary>ستون‌های مورد نیاز فایل</summary>
+          <code dir="ltr">indicator_code, period_date, value, unit, original_source</code>
+          <p>ستون‌های زمان انتشار، نشانی منبع، وضعیت، یادداشت و شناسه منبع اختیاری‌اند.</p>
+        </details>
+        <button type="submit" class="economic-button economic-button--primary">بررسی فایل</button>
+      </form>
+    </section>
+  </div>
+
+  <section class="economic-runs" aria-labelledby="recent-runs-title">
+    <div class="economic-runs__heading">
+      <div><p class="economic-update__eyebrow">ردپای عملیات</p><h2 id="recent-runs-title">آخرین اجراها</h2></div>
+      <a href="{% url 'admin:nicoption_dashboard_ingestionrun_changelist' %}">مشاهده همه</a>
+    </div>
+    <div class="economic-runs__table" tabindex="0">
+      <table>
+        <thead><tr><th scope="col">زمان</th><th scope="col">کانال</th><th scope="col">وضعیت</th><th scope="col">جدید</th><th scope="col">اصلاح</th><th scope="col">ردشده</th></tr></thead>
+        <tbody>
+        {% for run in recent_runs %}
+          <tr>
+            <td><a href="{% url 'admin:nicoption_dashboard_ingestionrun_change' run.pk %}">{{ run.started_at|date:"Y-m-d H:i" }}</a></td>
+            <td>{{ run.get_channel_display }}</td>
+            <td>{{ run.get_status_display }}</td>
+            <td class="numeric">{{ run.rows_inserted }}</td>
+            <td class="numeric">{{ run.rows_revised }}</td>
+            <td class="numeric">{{ run.rows_rejected }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6">هنوز اجرایی ثبت نشده است.</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+{% endblock %}
