@@ -25,12 +25,12 @@ jobs:
       - run: python -m pip check
       - run: python manage.py check
       - run: python manage.py makemigrations --check --dry-run
+      - run: python manage.py collectstatic --noinput
       - run: python manage.py test nicoption_dashboard
       - run: python -m unittest discover -s tests
       - run: node --check bambo_bot/web_static/financial-csv.js
       - run: node --check bambo_bot/web_static/app.js
       - run: node tests/test_financial_csv.js
-      - run: python manage.py collectstatic --noinput
       - name: Check production settings
         env:
           DJANGO_DEBUG: "false"

@@ -2,6 +2,9 @@ import struct
 from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
+from unittest import skipUnless
+
+from nicoption_dashboard.statistical_center_data import METADATA_FILE
 from django.conf import settings
 from django.test import RequestFactory, TestCase, override_settings
 
@@ -332,6 +335,7 @@ class DashboardPageTests(TestCase):
         self.assertContains(response, 'id="economicComparisonApp"')
         self.assertContains(response, "مقایسه روندهای اقتصادی")
 
+    @skipUnless(METADATA_FILE.exists(), "prepared Statistical Center data is excluded from the portfolio repository")
     def test_economic_comparison_catalog_includes_all_official_sources(self):
         response = self.client.get("/api/economic-comparison-indicators")
 

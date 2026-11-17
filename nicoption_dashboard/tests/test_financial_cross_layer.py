@@ -2,17 +2,22 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta
 from decimal import Decimal
+from unittest import skipUnless
 from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from audit.reference_engine import long_call_mark_to_market
+try:
+    from audit.reference_engine import long_call_mark_to_market
+except ModuleNotFoundError:
+    long_call_mark_to_market = None
 from bambo_bot.trades import quote_key, tehran_today
 from nicoption_dashboard.models import TradeRecord
 from nicoption_dashboard.services import get_runtime
 
 
+@skipUnless(long_call_mark_to_market, "private audit reference engine is excluded from the portfolio repository")
 class FinancialCrossLayerTests(TestCase):
     def setUp(self):
         self.user = get_user_model().objects.create_user(username="cross-layer-user")

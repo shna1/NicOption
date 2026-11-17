@@ -39,6 +39,7 @@ audit/private/
 .cursor/
 premium-audit.json
 research/private/
+statistical_center_indicators_definitions.csv
 
 # OS/editor
 .DS_Store

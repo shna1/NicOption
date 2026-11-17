@@ -2,10 +2,12 @@ from django.contrib.auth import get_user_model
 from django.core.management import CommandError, call_command
 from django.test import TestCase
 from unittest.mock import patch
+from unittest import skipUnless
 
 from nicoption_dashboard.amar_data import amar_comparison_catalog, amar_snapshot_payload
 from nicoption_dashboard.amar_mcp import AmarMcpResult
 from nicoption_dashboard.models import StatisticalCenterSnapshot
+from nicoption_dashboard.statistical_center_data import METADATA_FILE
 
 
 def sample_payload():
@@ -115,6 +117,7 @@ class AmarDataTests(TestCase):
         self.assertEqual([point["value"] for point in unemployment["series"]], [7.3, 7.6])
         self.assertAlmostEqual(unemployment["series"][-1]["period_change_percentage_points"], 0.3)
 
+    @skipUnless(METADATA_FILE.exists(), "prepared Statistical Center data is excluded from the portfolio repository")
     def test_statistical_center_catalog_includes_mcp_unemployment_series(self):
         StatisticalCenterSnapshot.objects.create(payload=sample_payload())
 
@@ -128,6 +131,7 @@ class AmarDataTests(TestCase):
         self.assertTrue(unemployment)
         self.assertEqual(unemployment[0]["series"][-1]["value"], 7.6)
 
+    @skipUnless(METADATA_FILE.exists(), "prepared Statistical Center data is excluded from the portfolio repository")
     def test_statistical_center_catalog_includes_annual_household_gini_series(self):
         payload = sample_payload()
         payload["macro"]["household"] = {
@@ -151,6 +155,7 @@ class AmarDataTests(TestCase):
         self.assertAlmostEqual(gini_series[0]["series"][-1]["period_change_coefficient"], -0.0021)
         self.assertAlmostEqual(gini_series[0]["series"][-1]["yearly_change_coefficient"], -0.0021)
 
+    @skipUnless(METADATA_FILE.exists(), "prepared Statistical Center data is excluded from the portfolio repository")
     def test_statistical_center_catalog_includes_travel_time_series(self):
         StatisticalCenterSnapshot.objects.create(payload=sample_payload())
 

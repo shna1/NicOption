@@ -118,5 +118,17 @@ This repository is a sanitized portfolio edition of the project. It is suitable 
 
 **Shabar Naderi** — Financial Data Analyst and Python developer focused on quantitative research and Iranian financial markets.
 
+NicOption was independently designed and developed by Shabar Naderi. My work on the project includes:
+
+- financial logic and covered-call analysis,
+- backend architecture and Django implementation,
+- PostgreSQL data modeling,
+- position-management and reporting workflows, and
+- the Persian right-to-left research interface.
+
 - [GitHub](https://github.com/shna1)
 - [LinkedIn](https://www.linkedin.com/in/shabar-naderi-1b7623b2/)
+
+## Copyright
+
+Copyright © 2026 Shabar Naderi. All rights reserved. This repository is published for portfolio review and evaluation; no permission is granted to copy, modify, distribute or use the code without written authorization. See [COPYRIGHT.md](COPYRIGHT.md).

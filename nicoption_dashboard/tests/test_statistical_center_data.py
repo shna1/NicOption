@@ -1,15 +1,18 @@
 import re
+from unittest import skipUnless
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 from nicoption_dashboard.statistical_center_data import (
+    METADATA_FILE,
     statistical_center_catalog,
     statistical_center_dataset,
     statistical_center_series,
 )
 
 
+@skipUnless(METADATA_FILE.exists(), "prepared Statistical Center data is excluded from the portfolio repository")
 class StatisticalCenterDatasetTests(TestCase):
     def setUp(self):
         statistical_center_dataset.cache_clear()
@@ -175,6 +178,7 @@ class StatisticalCenterApiTests(TestCase):
         self.user = get_user_model().objects.create_user(username="statistical-center-user")
         self.client.force_login(self.user)
 
+    @skipUnless(METADATA_FILE.exists(), "prepared Statistical Center data is excluded from the portfolio repository")
     def test_catalog_and_series_endpoints(self):
         catalog_response = self.client.get("/api/statistical-center-indicators")
         self.assertEqual(catalog_response.status_code, 200)
